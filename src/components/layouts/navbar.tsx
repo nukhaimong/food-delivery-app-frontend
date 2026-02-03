@@ -1,6 +1,6 @@
 'use client';
 
-import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -27,6 +27,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { ModeToggle } from './modeToggle';
+import Link from 'next/link';
 
 interface MenuItem {
   title: string;
@@ -38,6 +39,11 @@ interface MenuItem {
 
 interface Navbar1Props {
   className?: string;
+  logo?: {
+    url: string;
+    title: string;
+    className?: string;
+  };
   menu?: MenuItem[];
   auth?: {
     login: {
@@ -52,6 +58,10 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
+  logo = {
+    url: '/',
+    title: 'FOODIE',
+  },
   menu = [
     { title: 'Home', url: '/' },
     {
@@ -60,27 +70,34 @@ const Navbar = ({
     },
     {
       title: 'Explore Foods',
-      url: '#',
+      url: '/foods',
     },
     {
       title: 'About Us',
-      url: '#',
+      url: '/about-us',
+    },
+    {
+      title: 'Dashboard',
+      url: '/dashboard',
     },
   ],
   auth = {
-    login: { title: 'Login', url: '#' },
-    signup: { title: 'Sign up', url: '#' },
+    login: { title: 'Login', url: '/log-in' },
+    signup: { title: 'Sign up', url: 'sign-up' },
   },
   className,
 }: Navbar1Props) => {
   return (
     <section className={cn('py-4', className)}>
-      <div className="container">
+      <div className="container mx-auto">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <p className="cursor-pointer">FOODIE</p>
+            <Link href={logo.url}>
+              <p className="cursor-pointer">{logo.title}</p>
+            </Link>
+
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -104,7 +121,9 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <p>FOODIE</p>
+            <Link href={logo.url}>
+              <p className="cursor-pointer">{logo.title}</p>
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -114,7 +133,9 @@ const Navbar = ({
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <p>FOODIE</p>
+                    <Link href={logo.url}>
+                      <p className="cursor-pointer">{logo.title}</p>
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
@@ -128,10 +149,10 @@ const Navbar = ({
 
                   <div className="flex flex-col gap-3">
                     <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
+                      <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
+                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
                   </div>
                 </div>
@@ -145,21 +166,6 @@ const Navbar = ({
 };
 
 const renderMenuItem = (item: MenuItem) => {
-  if (item.items) {
-    return (
-      <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-popover text-popover-foreground">
-          {item.items.map((subItem) => (
-            <NavigationMenuLink asChild key={subItem.title} className="w-80">
-              <SubMenuLink item={subItem} />
-            </NavigationMenuLink>
-          ))}
-        </NavigationMenuContent>
-      </NavigationMenuItem>
-    );
-  }
-
   return (
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
