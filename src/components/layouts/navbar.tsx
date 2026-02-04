@@ -28,6 +28,8 @@ import {
 } from '@/components/ui/sheet';
 import { ModeToggle } from './modeToggle';
 import Link from 'next/link';
+import CartButton from '../modules/cart/cart';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface MenuItem {
   title: string;
@@ -108,12 +110,17 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModeToggle />
+            <CartButton itemCount={4} />
             <Button asChild variant="outline" size="sm">
               <a href={auth.login.url}>{auth.login.title}</a>
             </Button>
             <Button asChild size="sm">
               <a href={auth.signup.url}>{auth.signup.title}</a>
             </Button>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </div>
         </nav>
 
@@ -148,12 +155,21 @@ const Navbar = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
+                    <ModeToggle />
+                    <CartButton itemCount={4} />
                     <Button asChild variant="outline">
                       <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
                       <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
+                    <div className="flex justify-around items-center bg-gray-900 p-1 rounded-xl border border-gray-500">
+                      <p className="text-xl">Profile</p>
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </div>
                   </div>
                 </div>
               </SheetContent>
