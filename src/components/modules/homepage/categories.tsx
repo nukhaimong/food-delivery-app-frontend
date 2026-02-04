@@ -29,6 +29,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
                   src={category.image}
                   alt={category.name}
                   fill
+                  sizes="400"
                   className="object-contain transition group-hover:scale-105"
                 />
               </div>
