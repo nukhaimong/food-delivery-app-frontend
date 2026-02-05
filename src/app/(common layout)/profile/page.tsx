@@ -1,4 +1,5 @@
 import ProfileCard from '@/components/provider/profile/profileCard';
+import ProfileUploadForm from '@/components/provider/profile/ProfileUploadForm';
 import { Roles } from '@/constant/roles';
 import { userService } from '@/services/user.service';
 
@@ -18,11 +19,14 @@ export default async function Profile() {
   return (
     <div className="max-w-7xl mx-auto">
       {data.user.user_role === Roles.user ? (
-        <ProfileCard
-          role={data.user.user_role}
-          name={data.user.name}
-          profileImage={data.user.image}
-        />
+        <>
+          <ProfileCard
+            role={data.user.user_role}
+            name={data.user.name}
+            profileImage={data.user.image}
+          />
+          <ProfileUploadForm />
+        </>
       ) : (
         <ProfileCard
           role={providerInfo.role}

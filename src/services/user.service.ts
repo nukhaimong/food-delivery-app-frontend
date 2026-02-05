@@ -44,4 +44,33 @@ export const userService = {
       return { data: null, error: { message: 'Something Went Wrong' } };
     }
   },
+  updateUser: async (imageUrl?: string, name?: string) => {
+    try {
+      const cookieStore = cookies();
+
+      const res = await fetch(`${APP_URL}/users/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(), // ✅ REQUIRED
+        },
+        body: JSON.stringify({
+          ...(name && { name }),
+          ...(imageUrl && { image: imageUrl }),
+        }),
+        cache: 'no-store',
+      });
+
+      if (!res.ok) {
+        console.error('Backend error:', res.status);
+        return { data: null, error: { message: 'Update failed' } };
+      }
+
+      const updatedUser = await res.json();
+      return { data: updatedUser, error: null };
+    } catch (error) {
+      console.error('Service error:', error);
+      return { data: null, error: { message: 'Something went wrong' } };
+    }
+  },
 };

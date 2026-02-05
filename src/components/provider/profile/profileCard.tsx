@@ -26,7 +26,7 @@ type ProfileProps = UserProfileProps | ProviderProfileProps;
 export default function ProfileCard(props: ProfileProps) {
   console.log(props.name);
   return (
-    <div className="w-full max-w-2xl rounded-xl border bg-white p-6 shadow-sm dark:text-black my-10">
+    <div className="w-full max-w-2xl rounded-xl border p-6 shadow-sm my-10">
       {/* Profile Header */}
       <div className="flex items-center gap-4">
         <div className="relative overflow-hidden h-28 w-28 rounded-full border">
