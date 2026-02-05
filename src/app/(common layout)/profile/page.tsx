@@ -1,3 +1,4 @@
+import CreateProviderProfile from '@/components/modules/profile/createProviderProfile';
 import ProfileCard from '@/components/modules/profile/profileCard';
 import UpdateUserProfile from '@/components/modules/profile/updateUserProfile';
 import { Roles } from '@/constant/roles';
@@ -15,6 +16,18 @@ export default async function Profile() {
     restaurantName: provider.provider.providerProfile?.restaurant_name,
     phone: provider.provider.providerProfile?.phone_number,
   };
+  if (
+    data.user.user_role !== Roles.user &&
+    data.user.user_role !== Roles.provider
+  ) {
+    return (
+      <div className="flex justify-center mt-24 ">
+        <h1 className="font-bold text-4xl text-red-600 h-screen">
+          You're Admin. Your profile is not ready yet
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -28,15 +41,21 @@ export default async function Profile() {
           <UpdateUserProfile />
         </>
       ) : (
-        <ProfileCard
-          role={providerInfo.role}
-          name={providerInfo.name}
-          profileImage={providerInfo.profileImage}
-          address={providerInfo.address}
-          restaurantImage={providerInfo.restaurantImage}
-          restaurantName={providerInfo.restaurantName}
-          phone={providerInfo.phone}
-        />
+        <>
+          <div className="flex gap-10 items-start">
+            <ProfileCard
+              role={providerInfo.role}
+              name={providerInfo.name}
+              profileImage={providerInfo.profileImage}
+              address={providerInfo.address}
+              restaurantImage={providerInfo.restaurantImage}
+              restaurantName={providerInfo.restaurantName}
+              phone={providerInfo.phone}
+            />
+            <UpdateUserProfile />
+          </div>
+          <CreateProviderProfile />
+        </>
       )}
     </div>
   );

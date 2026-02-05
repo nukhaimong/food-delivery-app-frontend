@@ -10,8 +10,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-const uploading = 'uploading...';
-
 export default function UpdateUserProfile() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -46,7 +44,10 @@ export default function UpdateUserProfile() {
     },
   });
   return (
-    <div className="max-w-xl">
+    <div className="max-w-xl w-full mb-10">
+      <p className="text-2xl my-5 font-bold">
+        Update Your Profile Name And Photo
+      </p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
