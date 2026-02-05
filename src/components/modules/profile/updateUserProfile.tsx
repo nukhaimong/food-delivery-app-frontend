@@ -9,6 +9,12 @@ import { useForm } from '@tanstack/react-form';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import * as z from 'zod';
+
+const userSchema = z.object({
+  name: z.string(),
+  imageUrl: z.string(),
+});
 
 export default function UpdateUserProfile() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -18,6 +24,9 @@ export default function UpdateUserProfile() {
     defaultValues: {
       name: '',
       imageUrl: '',
+    },
+    validators: {
+      onSubmit: userSchema,
     },
     onSubmit: async ({ value }) => {
       try {

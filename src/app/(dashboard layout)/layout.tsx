@@ -18,26 +18,16 @@ export default async function DashBoardLayout({
   provider: React.ReactNode;
 }) {
   const { data } = await userService.getSession();
-  console.log(data);
   let userRole = data.user.user_role;
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="gap-24">
       <AppSidebar userRole={userRole} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          {userRole === Roles.provider
-            ? provider
-            : userRole === Roles.admin
-              ? admin
-              : user}
-        </header>
-      </SidebarInset>
+      {userRole === Roles.provider
+        ? provider
+        : userRole === Roles.admin
+          ? admin
+          : user}
     </SidebarProvider>
   );
 }

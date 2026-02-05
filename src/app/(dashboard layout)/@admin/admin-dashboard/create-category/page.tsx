@@ -1,6 +1,6 @@
 'use client';
 
-import { createProviderProfile } from '@/actions/user.action';
+import { createCategory } from '@/actions/user.action';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -11,46 +11,43 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
-const providerSchema = z.object({
-  restaurantName: z.string(),
-  restaurantImageUrl: z.string(),
-  address: z.string(),
-  phone: z.string(),
+const categorySchema = z.object({
+  categoryName: z.string(),
+  description: z.string(),
+  categoryImage: z.string(),
 });
 
-export default function CreateProviderProfile() {
+export default function Page() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
-      restaurantName: '',
-      restaurantImageUrl: '',
-      address: '',
-      phone: '',
+      categoryName: '',
+      description: '',
+      categoryImage: '',
     },
     validators: {
-      onSubmit: providerSchema,
+      onSubmit: categorySchema,
     },
     onSubmit: async ({ value }) => {
       try {
-        let restaurantImageUrl = value.restaurantImageUrl;
+        let categoryImage = value.categoryImage;
         if (selectedImage) {
-          toast.loading('Uploding Image');
-          restaurantImageUrl = await uploadToCloudinary(selectedImage);
+          toast.loading('Uploading Image');
+          categoryImage = await uploadToCloudinary(selectedImage);
           toast.dismiss();
         }
-        const res = await createProviderProfile(
-          restaurantImageUrl,
-          value.address,
-          value.restaurantName,
-          value.phone,
+        const res = await createCategory(
+          value.categoryName,
+          value.description,
+          categoryImage,
         );
         if (res.error) {
-          toast.error('profile creation failed');
+          toast.error('Category creation failed');
           return;
         }
-        toast.success('Profile Created Successfully');
+        toast.success('Category Creation Successfylly');
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');
@@ -58,12 +55,9 @@ export default function CreateProviderProfile() {
     },
   });
   return (
-    <div className="max-w-xl">
-      <p className="font-bold text-2xl my-5">
-        Create or update Your Restaurant Profile
-      </p>
+    <div className="max-w-xl w-full mt-24">
       <form
-        id="create-profile"
+        id="category"
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit();
@@ -71,11 +65,11 @@ export default function CreateProviderProfile() {
       >
         <FieldGroup>
           <form.Field
-            name="restaurantName"
+            name="categoryName"
             children={(field) => {
               return (
                 <Field>
-                  <FieldLabel>Restaurant Name</FieldLabel>
+                  <FieldLabel>Category Name</FieldLabel>
                   <Input
                     type="text"
                     name={field.name}
@@ -87,11 +81,11 @@ export default function CreateProviderProfile() {
             }}
           />
           <form.Field
-            name="address"
+            name="description"
             children={(field) => {
               return (
                 <Field>
-                  <FieldLabel>Restaurant Address</FieldLabel>
+                  <FieldLabel>Category Description</FieldLabel>
                   <Input
                     type="text"
                     name={field.name}
@@ -102,23 +96,6 @@ export default function CreateProviderProfile() {
               );
             }}
           />
-          <form.Field
-            name="phone"
-            children={(field) => {
-              return (
-                <Field>
-                  <FieldLabel>Phone Number</FieldLabel>
-                  <Input
-                    type="text"
-                    name={field.name}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </Field>
-              );
-            }}
-          />
-          <FieldLabel>Choose Your Image</FieldLabel>
           <Input
             type="file"
             accept="image/*"
@@ -131,7 +108,7 @@ export default function CreateProviderProfile() {
           />
           {preview && (
             <div className="mt-5 flex justify-start">
-              <div className="relative h-30 w-30 overflow-hidden  border-2 border-muted shadow-md transition hover:shadow-lg">
+              <div className="relative h-30 w-30 overflow-hidden border-2 border-muted shadow-md transition hover:shadow-lg">
                 <Image
                   src={preview}
                   alt="Profile preview"
@@ -144,8 +121,12 @@ export default function CreateProviderProfile() {
           )}
         </FieldGroup>
       </form>
-      <Button form="create-profile" type="submit" className="my-5">
-        Create Profile
+      <Button
+        form="category"
+        type="submit"
+        className="w-full my-5 py-5 font-bold text-xl"
+      >
+        Create Category
       </Button>
     </div>
   );

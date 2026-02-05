@@ -33,12 +33,16 @@ export const adminRoutes: Routes[] = [
     title: 'Manage Users and Providers',
     items: [
       {
-        title: 'See all Asers',
-        url: '/user-dashboard/all-users',
+        title: 'See all Users',
+        url: '/admin-dashboard/all-users',
       },
       {
         title: 'See All Providers',
-        url: '/user-dashboard/all-providers',
+        url: '/admin-dashboard/all-providers',
+      },
+      {
+        title: 'Create Cuisine Category',
+        url: '/admin-dashboard/create-category',
       },
     ],
   },
