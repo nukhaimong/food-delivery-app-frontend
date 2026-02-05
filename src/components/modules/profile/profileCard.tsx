@@ -24,7 +24,6 @@ interface ProviderProfileProps extends BaseProfileProps {
 type ProfileProps = UserProfileProps | ProviderProfileProps;
 
 export default function ProfileCard(props: ProfileProps) {
-  console.log(props.name);
   return (
     <div className="w-full max-w-2xl rounded-xl border p-6 shadow-sm my-10">
       {/* Profile Header */}
@@ -36,6 +35,7 @@ export default function ProfileCard(props: ProfileProps) {
               alt={props.name}
               fill
               className="object-cover"
+              sizes="96px"
             />
           ) : (
             <Avatar className="object-cover h-full w-full">

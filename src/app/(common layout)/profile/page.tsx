@@ -1,5 +1,5 @@
-import ProfileCard from '@/components/provider/profile/profileCard';
-import ProfileUploadForm from '@/components/provider/profile/ProfileUploadForm';
+import ProfileCard from '@/components/modules/profile/profileCard';
+import UpdateUserProfile from '@/components/modules/profile/updateUserProfile';
 import { Roles } from '@/constant/roles';
 import { userService } from '@/services/user.service';
 
@@ -25,7 +25,7 @@ export default async function Profile() {
             name={data.user.name}
             profileImage={data.user.image}
           />
-          <ProfileUploadForm />
+          <UpdateUserProfile />
         </>
       ) : (
         <ProfileCard

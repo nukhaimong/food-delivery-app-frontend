@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { cookies } from 'next/headers';
 
 const AUTH_URL = process.env.AUTH_URL;
@@ -46,13 +45,13 @@ export const userService = {
   },
   updateUser: async (imageUrl?: string, name?: string) => {
     try {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
 
       const res = await fetch(`${APP_URL}/users/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(), // ✅ REQUIRED
+          Cookie: cookieStore.toString(),
         },
         body: JSON.stringify({
           ...(name && { name }),
