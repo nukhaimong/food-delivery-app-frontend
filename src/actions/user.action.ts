@@ -31,3 +31,7 @@ export const createCategory = async (
     category_image,
   );
 };
+
+export const getCategory = async () => {
+  return await categoryService.getCategory();
+};

@@ -15,7 +15,7 @@ export default function FoodHero({
   primaryCtaHref = '/restaurants',
 }: FoodHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-orange-50 to-white px-6 py-24">
+    <section className="relative overflow-hidden ">
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-16 md:grid-cols-2">
           {/* Text content */}
@@ -68,8 +68,8 @@ export default function FoodHero({
 
           {/* Visual placeholder */}
           <div className="relative hidden md:block">
-            <div className="absolute inset-0 rounded-3xl bg-orange-100" />
-            <div className="relative flex h-full items-center justify-center rounded-3xl bg-white p-12 shadow-xl">
+            <div className="absolute inset-0 rounded-3xl " />
+            <div className="relative flex h-full items-center justify-center rounded-3xl p-12 shadow-xl">
               <span className="text-6xl">🍕🍟🍜</span>
             </div>
           </div>

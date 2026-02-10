@@ -93,6 +93,7 @@ export const userService = {
           ...(phone && { phone_number: phone }),
         }),
       });
+
       if (!res.ok) {
         console.error('Backend error:', res.status);
         return { data: null, error: { message: 'Profile Creation failed' } };

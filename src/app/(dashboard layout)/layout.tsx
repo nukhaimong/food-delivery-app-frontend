@@ -1,10 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
-import { Separator } from '@/components/ui/separator';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { Roles } from '@/constant/roles';
 import { userService } from '@/services/user.service';
 
