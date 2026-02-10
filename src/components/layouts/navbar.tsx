@@ -153,7 +153,7 @@ const Navbar = ({
 
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
-                    <CartButton itemCount={4} />
+                    <CartButton />
                     <Button asChild variant="outline">
                       <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>

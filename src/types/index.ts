@@ -1,7 +1,33 @@
-export interface MealData {
-  category_id: string;
+export interface Meal {
+  id: string;
   meal_name: string;
-  image_url?: string;
-  description?: string;
+  image_url: string;
   price: number;
+  description: string;
+  category: {
+    id: string;
+    category_name: string;
+  };
+  provider: {
+    name: string;
+    providerProfile: {
+      id: string;
+      restaurant_name: string;
+    };
+  };
+}
+
+export interface CartMeal {
+  id: string;
+  meal_name: string;
+  price: number;
+  image_url: string;
+  category: {
+    category_name: string;
+  };
+  provider: {
+    providerProfile: {
+      restaurant_name: string;
+    };
+  };
 }
