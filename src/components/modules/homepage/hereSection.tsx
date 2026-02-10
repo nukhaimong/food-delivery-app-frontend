@@ -15,7 +15,7 @@ export default function FoodHero({
   primaryCtaHref = '/restaurants',
 }: FoodHeroProps) {
   return (
-    <section className="relative overflow-hidden ">
+    <section className="relative overflow-hidden p-20">
       <div className="mx-auto max-w-6xl">
         <div className="grid items-center gap-16 md:grid-cols-2">
           {/* Text content */}

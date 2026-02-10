@@ -2,11 +2,14 @@ import CreateProviderProfile from '@/components/modules/profile/createProviderPr
 import ProfileCard from '@/components/modules/profile/profileCard';
 import UpdateUserProfile from '@/components/modules/profile/updateUserProfile';
 import { Roles } from '@/constant/roles';
+import { providerService } from '@/services/provider.service';
 import { userService } from '@/services/user.service';
 
 export default async function Profile() {
   const { data } = await userService.getSession();
-  const { data: provider } = await userService.getProvider(data.user.id);
+  const { data: provider } = await providerService.getProviderById(
+    data.user.id,
+  );
   const providerInfo = {
     role: provider.provider.user_role,
     name: provider.provider.name,

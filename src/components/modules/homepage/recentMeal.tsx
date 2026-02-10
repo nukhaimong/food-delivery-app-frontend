@@ -1,12 +1,24 @@
 import Image from 'next/image';
-import { Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Clock, Store } from 'lucide-react';
 
 export interface Meal {
   id: string;
-  name: string;
-  image: string; // image URL or local path
+  meal_name: string;
+  image_url: string;
   price: number;
-  restaurant: string;
+  description: string;
+  category: {
+    id: string;
+    category_name: string;
+  };
+  provider: {
+    name: string;
+    providerProfile: {
+      id: string;
+      restaurant_name: string;
+    };
+  };
 }
 
 interface RecentMealsSectionProps {
@@ -15,51 +27,82 @@ interface RecentMealsSectionProps {
 
 export default function RecentMealsSection({ meals }: RecentMealsSectionProps) {
   return (
-    <section className="px-6 py-16">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Most recent meals
-          </h2>
+    <section className="px-6 py-16 bg-white dark:bg-zinc-950">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
+              Most recent meals
+            </h2>
+            <p className="mt-2 text-zinc-500 dark:text-zinc-400">
+              Discover the latest culinary additions to our menu.
+            </p>
+          </div>
 
-          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-sm font-medium text-orange-600 dark:bg-orange-950/30">
             <Clock className="h-4 w-4" />
-            Freshly added
-          </span>
+            <span>Freshly added</span>
+          </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {/* Grid */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {meals.map((meal) => (
             <div
               key={meal.id}
-              className="group overflow-hidden rounded-2xl border bg-white transition hover:shadow-lg"
+              className="group flex flex-col overflow-hidden rounded-3xl border border-zinc-100 bg-white transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 dark:border-zinc-800 dark:bg-zinc-900"
             >
-              {/* Image */}
-              <div className="relative h-44 w-full overflow-hidden">
+              {/* Image Container */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <Image
-                  src={meal.image}
-                  alt={meal.name}
+                  src={meal.image_url}
+                  alt={meal.meal_name}
                   fill
-                  className="object-cover transition group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  priority
                 />
+                {/* Category Badge */}
+                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-900 backdrop-blur-sm dark:bg-zinc-900/90 dark:text-white">
+                  {meal.category.category_name}
+                </div>
               </div>
 
               {/* Content */}
-              <div className="p-4">
-                <h3 className="line-clamp-1 text-sm font-semibold">
-                  {meal.name}
-                </h3>
+              <div className="flex flex-1 flex-col p-5">
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <h3 className="line-clamp-1 text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                    {meal.meal_name}
+                  </h3>
+                </div>
 
-                <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                  {meal.restaurant}
+                <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+                  <Store className="h-3.5 w-3.5" />
+                  <span className="line-clamp-1 text-xs font-medium italic">
+                    {meal.provider.providerProfile.restaurant_name}
+                  </span>
+                </div>
+
+                <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                  {meal.description}
                 </p>
 
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-sm font-bold">₹{meal.price}</span>
+                {/* Footer */}
+                <div className="mt-auto pt-5 flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-zinc-400">Price</span>
+                    <span className="text-xl font-black text-zinc-900 dark:text-white">
+                      ${meal.price}
+                    </span>
+                  </div>
 
-                  <button className="rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-600">
-                    Add
-                  </button>
+                  <Link
+                    href={`/meals/${meal.id}`}
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white transition-all hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40 active:scale-95"
+                  >
+                    <span className="text-xl font-light">+</span>
+                  </Link>
                 </div>
               </div>
             </div>

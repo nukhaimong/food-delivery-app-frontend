@@ -1,6 +1,7 @@
 'use server';
 
 import { categoryService } from '@/services/category.service';
+import { providerService } from '@/services/provider.service';
 import { userService } from '@/services/user.service';
 
 export const updateUser = async (imageUrl: string, name: string) => {
@@ -12,7 +13,7 @@ export const createProviderProfile = async (
   restarantName?: string,
   phone?: string,
 ) => {
-  return await userService.createProviderProfile(
+  return await providerService.createProviderProfile(
     restaurantImageUrl,
     address,
     restarantName,

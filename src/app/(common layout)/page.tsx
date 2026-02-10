@@ -3,40 +3,9 @@ import FoodHero from '@/components/modules/homepage/hereSection';
 import RecentMealsSection from '@/components/modules/homepage/recentMeal';
 import TopRestaurantsSection from '@/components/modules/homepage/topRestaurants';
 import { categoryService } from '@/services/category.service';
+import { mealService } from '@/services/meal.service';
+import { providerService } from '@/services/provider.service';
 import { cognito } from 'better-auth';
-
-export const dummyCategories = [
-  {
-    id: '1',
-    name: 'Pizza',
-    image: 'https://cdn-icons-png.flaticon.com/512/1404/1404945.png',
-  },
-  {
-    id: '2',
-    name: 'Burgers',
-    image: 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png',
-  },
-  {
-    id: '3',
-    name: 'Biryani',
-    image: 'https://cdn-icons-png.flaticon.com/512/857/857681.png',
-  },
-  {
-    id: '4',
-    name: 'Chinese',
-    image: 'https://cdn-icons-png.flaticon.com/512/3480/3480618.png',
-  },
-  {
-    id: '5',
-    name: 'Desserts',
-    image: 'https://cdn-icons-png.flaticon.com/512/3081/3081967.png',
-  },
-  {
-    id: '6',
-    name: 'Drinks',
-    image: 'https://cdn-icons-png.flaticon.com/512/3050/3050158.png',
-  },
-];
 
 export const dummyMeals = [
   {
@@ -136,13 +105,18 @@ export const dummyRestaurants = [
 
 export default async function Home() {
   const { data } = await categoryService.getCategory();
+  const { data: mealData } = await mealService.getMeal();
+  const { data: providers } = await providerService.getProvidersProfiles();
+  const providersData = providers.allProvidersProfiles;
   const categories = data.category;
+  const meals = mealData.meals;
+
   return (
     <div className="max-w-7xl mx-auto">
       <FoodHero />
-      <CategorySection categories={dummyCategories} />
-      <RecentMealsSection meals={dummyMeals} />
-      <TopRestaurantsSection restaurants={dummyRestaurants} />
+      <CategorySection categories={categories} />
+      <RecentMealsSection meals={meals} />
+      <TopRestaurantsSection restaurants={providersData} />
     </div>
   );
 }

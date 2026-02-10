@@ -20,6 +20,24 @@ export const categoryService = {
       return { data: null, error: { message: 'Something Went Wrong' } };
     }
   },
+  getCategoryById: async (category_id: string) => {
+    try {
+      const res = await fetch(`${APP_URL}/category/${category_id}`, {
+        next: {
+          revalidate: 60,
+        },
+      });
+
+      if (!res.ok) {
+        return { data: null, error: { message: 'Meal fetch Successfully' } };
+      }
+      const categories = await res.json();
+
+      return { data: categories, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Something Went Wrong' } };
+    }
+  },
   createCategory: async (
     category_name: string,
     description: string,
