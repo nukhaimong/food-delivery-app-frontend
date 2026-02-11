@@ -33,3 +33,12 @@ export interface CartMeal {
     };
   };
 }
+
+export interface orderData {
+  providerProfile_id: string;
+  meal_id: string;
+  quantity: number;
+  price: number;
+  delivery_address: string;
+  phone_number: string;
+}

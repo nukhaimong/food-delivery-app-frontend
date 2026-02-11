@@ -55,7 +55,7 @@ interface Navbar1Props {
 const Navbar = ({
   logo = {
     url: '/',
-    title: 'FOODIE',
+    title: 'HANG',
   },
   menu = [
     { title: 'Home', url: '/' },
@@ -90,7 +90,10 @@ const Navbar = ({
           <div className="flex items-center gap-6">
             {/* Logo */}
             <Link href={logo.url}>
-              <p className="cursor-pointer">{logo.title}</p>
+              <p className="cursor-pointer text-3xl font-black tracking-tighter text-zinc-900 dark:text-white">
+                H<span className="text-orange-500">AANG</span>
+                <span className="inline-block h-2 w-2 rounded-full bg-orange-500 ml-0.5" />
+              </p>
             </Link>
 
             <div className="flex items-center">

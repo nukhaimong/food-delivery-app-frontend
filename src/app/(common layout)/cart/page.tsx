@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   ArrowLeft,
   ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/useCartStore';
@@ -17,6 +18,9 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import z from 'zod';
+import { createOrder } from '@/actions/order.action';
+import { useState } from 'react';
+import { Router } from 'next/router';
 
 const orderSchema = z.object({
   delivery_address: z
@@ -28,10 +32,9 @@ const orderSchema = z.object({
 });
 
 export default function CartPage() {
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } =
     useCartStore();
-
-  console.log(items);
 
   const form = useForm({
     defaultValues: {
@@ -42,28 +45,74 @@ export default function CartPage() {
       onSubmit: orderSchema,
     },
     onSubmit: async ({ value }) => {
-      const cartData = {
-        OrderItems: items.map((item) => ({
-          providerProvider_Id: item.provider.providerProfile.providerProfileId,
+      const toastId = toast.loading(`Sending your order to kictche...`);
+      try {
+        const cartData = items.map((item) => ({
+          providerProfile_id: item.provider.providerProfile.providerProfileId,
           meal_id: item.meal_id,
           quantity: item.quantity,
           price: item.price,
           delivery_address: value.delivery_address,
           phone_number: value.phone_number,
-        })),
-      };
+        }));
 
-      console.log('Sending to backend:', cartData);
+        const res = await createOrder(cartData);
 
-      const loadingId = toast.loading('Processing order...');
-
-      toast.dismiss(loadingId);
-      toast.success('Order placed successfully!');
-      clearCart();
+        if (res.error) {
+          toast.error(res.error.message);
+          return;
+        }
+        setIsConfirmed(true);
+        toast.success('Your order has been placed.', {
+          id: toastId,
+          description:
+            'You can track the preparation status in your dashboard.',
+        });
+        clearCart();
+      } catch (error) {
+        toast.error('Somethign went wrong, please try again', { id: toastId });
+      }
     },
   });
 
   const subtotal = getTotalPrice();
+
+  if (isConfirmed) {
+    return (
+      <div className="flex min-h-[70vh] flex-col items-center justify-center p-10 text-center animate-in fade-in zoom-in duration-500">
+        {/* Icon Container with Dark Mode support */}
+        <div className="h-24 w-24 bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-full flex items-center justify-center mb-6 shadow-sm">
+          <CheckCircle2 size={48} />
+        </div>
+
+        {/* Text Content */}
+        <h2 className="text-3xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight">
+          Order Confirmed!
+        </h2>
+        <p className="text-zinc-500 dark:text-zinc-400 mt-3 max-w-sm text-lg">
+          Your meal is being prepared as we speak. You'll be eating delicious
+          food in no time!
+        </p>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-10">
+          <Link href="/user-dashboard">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-2xl px-10 h-14 text-lg font-bold shadow-lg shadow-orange-500/20 transition-all active:scale-95">
+              Track Order
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="rounded-2xl px-10 h-14 text-lg font-bold border-zinc-200 dark:border-zinc-800 dark:text-zinc-300"
+            >
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
