@@ -1,4 +1,4 @@
-import { orderData } from '@/types';
+import { orderData, OrderStatus } from '@/types';
 
 import { cookies } from 'next/headers';
 
@@ -23,6 +23,53 @@ export const orderService = {
       }
       const order = await res.json();
       return { data: order, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Order Creation Failed' } };
+    }
+  },
+  getOrderByProviderId: async () => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/order/provider`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        cache: 'no-cache',
+        next: {
+          revalidate: 10,
+        },
+      });
+
+      if (!res.ok) {
+        return { data: null, error: { message: 'Failed To Fetch Orders' } };
+      }
+      const orders = await res.json();
+      return { data: orders, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Failed To Fetch Orders' } };
+    }
+  },
+  updateOrder: async (order_id: string, orderStatus: OrderStatus) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/order/update${order_id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(orderStatus),
+        cache: 'no-cache',
+      });
+      if (!res.ok) {
+        return { data: null, error: { message: 'Order Creation Failed' } };
+      }
+      const updateOrder = await res.json();
+      return { data: updateOrder, error: null };
     } catch (error) {
       return { data: null, error: { message: 'Order Creation Failed' } };
     }

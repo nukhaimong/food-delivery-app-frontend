@@ -42,3 +42,10 @@ export interface orderData {
   delivery_address: string;
   phone_number: string;
 }
+
+export enum OrderStatus {
+  pending = 'PENDING',
+  preparing = 'PREPARING',
+  delivered = 'DELIVERED',
+  cancelled = 'CANCELLED',
+}
