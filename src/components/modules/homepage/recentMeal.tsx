@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Clock, Store } from 'lucide-react';
 import { CartMeal, Meal } from '@/types';
 import { useCartStore } from '@/store/useCartStore';
@@ -15,11 +14,11 @@ interface RecentMealsSectionProps {
 export default function RecentMealsSection({ meals }: RecentMealsSectionProps) {
   const addItem = useCartStore((state) => state.addToCart);
 
-  console.log(meals);
   const handleAddToCart = (meal: CartMeal) => {
     addItem(meal);
     toast.success(`${meal.meal_name} added to cart`);
   };
+
   return (
     <section className="px-6 py-16 bg-white dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl">
@@ -94,7 +93,7 @@ export default function RecentMealsSection({ meals }: RecentMealsSectionProps) {
                   <Button
                     onClick={(e) =>
                       handleAddToCart({
-                        id: meal.id,
+                        meal_id: meal.id,
                         meal_name: meal.meal_name,
                         price: meal.price,
                         image_url: meal.image_url,
@@ -103,6 +102,7 @@ export default function RecentMealsSection({ meals }: RecentMealsSectionProps) {
                         },
                         provider: {
                           providerProfile: {
+                            providerProfileId: meal.provider.providerProfile.id,
                             restaurant_name:
                               meal.provider.providerProfile.restaurant_name,
                           },

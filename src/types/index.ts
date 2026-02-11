@@ -9,6 +9,7 @@ export interface Meal {
     category_name: string;
   };
   provider: {
+    id: string;
     name: string;
     providerProfile: {
       id: string;
@@ -18,7 +19,7 @@ export interface Meal {
 }
 
 export interface CartMeal {
-  id: string;
+  meal_id: string;
   meal_name: string;
   price: number;
   image_url: string;
@@ -27,6 +28,7 @@ export interface CartMeal {
   };
   provider: {
     providerProfile: {
+      providerProfileId: string;
       restaurant_name: string;
     };
   };

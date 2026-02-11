@@ -2,10 +2,6 @@ import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/store/useCartStore';
 
-interface CartButtonProps {
-  itemCount?: number;
-}
-
 export default function CartButton() {
   const { items } = useCartStore();
   const itemCount = items.length;

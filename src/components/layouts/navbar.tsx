@@ -8,11 +8,9 @@ import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import {
   Sheet,
@@ -105,7 +103,7 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModeToggle />
-            <CartButton itemCount={4} />
+            <CartButton />
             <Button asChild variant="outline" size="sm">
               <a href={auth.login.url}>{auth.login.title}</a>
             </Button>

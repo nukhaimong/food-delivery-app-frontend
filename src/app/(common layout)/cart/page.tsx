@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -11,19 +12,58 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/store/useCartStore';
+import { useForm } from '@tanstack/react-form';
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
+import z from 'zod';
+
+const orderSchema = z.object({
+  delivery_address: z
+    .string('derivery address is required')
+    .min(10, 'Minimum 10 characters is required for delivery address'),
+  phone_number: z
+    .string('phone number is required')
+    .min(10, 'Minimum 11 numbers is required for delivery address'),
+});
 
 export default function CartPage() {
-  const { items, addToCart, updateQuantity, removeFromCart, getTotalPrice } =
+  const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } =
     useCartStore();
 
-  // Logic to handle calculations
-  const subtotal = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
-  const tax = subtotal * 0.08; // 8% Tax
-  const deliveryFee = items.length > 0 ? 4.99 : 0;
-  const total = subtotal + tax + deliveryFee;
+  console.log(items);
+
+  const form = useForm({
+    defaultValues: {
+      delivery_address: '',
+      phone_number: '',
+    },
+    validators: {
+      onSubmit: orderSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const cartData = {
+        OrderItems: items.map((item) => ({
+          providerProvider_Id: item.provider.providerProfile.providerProfileId,
+          meal_id: item.meal_id,
+          quantity: item.quantity,
+          price: item.price,
+          delivery_address: value.delivery_address,
+          phone_number: value.phone_number,
+        })),
+      };
+
+      console.log('Sending to backend:', cartData);
+
+      const loadingId = toast.loading('Processing order...');
+
+      toast.dismiss(loadingId);
+      toast.success('Order placed successfully!');
+      clearCart();
+    },
+  });
+
+  const subtotal = getTotalPrice();
 
   if (items.length === 0) {
     return (
@@ -31,17 +71,14 @@ export default function CartPage() {
         <div className="rounded-full bg-zinc-100 p-8 dark:bg-zinc-900">
           <ShoppingBag className="h-16 w-16 text-zinc-300" />
         </div>
-        <h2 className="text-3xl font-bold tracking-tight">
+        <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
           Your cart is empty
         </h2>
-        <p className="max-w-xs text-zinc-500">
-          Looks like you haven't added any delicious meals to your tray yet.
-        </p>
         <Button
           asChild
           className="mt-6 bg-orange-500 px-8 py-6 text-lg hover:bg-orange-600"
         >
-          <Link href="/">Discover Meals</Link>
+          <Link href="/">Browse Menu</Link>
         </Button>
       </div>
     );
@@ -51,128 +88,183 @@ export default function CartPage() {
     <div className="mx-auto max-w-7xl px-6 py-12 mt-16">
       <Link
         href="/"
-        className="mb-8 flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-orange-600"
+        className="mb-8 flex items-center gap-2 text-sm text-zinc-500 hover:text-orange-600 transition-colors"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Continue Ordering
+        <ArrowLeft className="h-4 w-4" /> Continue Ordering
       </Link>
 
-      <div className="flex items-baseline gap-4 mb-10">
-        <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white">
-          Cart
-        </h1>
-        <span className="text-lg text-zinc-400 font-medium">
-          ({items.length} items)
-        </span>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-        {/* Cart Items List */}
-        <div className="lg:col-span-7 space-y-8">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="group relative flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-zinc-100 dark:border-zinc-800"
-            >
-              <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-[2rem] bg-zinc-100 dark:bg-zinc-800">
-                <Image
-                  src={item.image_url}
-                  alt={item.meal_name}
-                  fill
-                  className="object-cover transition-transform group-hover:scale-110"
-                />
-              </div>
+        {/* Left Side: Order Items */}
+        <div className="lg:col-span-7">
+          <h1 className="text-4xl font-black mb-10 tracking-tight">
+            Your Order
+          </h1>
+          <div className="space-y-8">
+            {items.map((item) => (
+              <div
+                key={item.meal_id}
+                className="flex items-center gap-6 pb-8 border-b border-zinc-100 dark:border-zinc-800"
+              >
+                <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-[2rem] bg-zinc-100 dark:bg-zinc-800">
+                  <Image
+                    src={item.image_url}
+                    alt={item.meal_name}
+                    fill
+                    sizes="96px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold">{item.meal_name}</h3>
+                  <p className="text-sm text-zinc-500 italic">
+                    {item.provider.providerProfile.restaurant_name}
+                  </p>
 
-              <div className="flex flex-1 flex-col text-center sm:text-left">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-                    {item.meal_name}
-                  </h3>
-                  <p className="text-lg font-black text-orange-600">
+                  <div className="mt-4 flex items-center gap-6">
+                    <div className="flex items-center gap-4 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-1.5">
+                      <button
+                        onClick={() => updateQuantity(item.meal_id, -1)}
+                        className="hover:text-orange-500 transition-colors"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <span className="text-sm font-black w-4 text-center">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => updateQuantity(item.meal_id, 1)}
+                        className="hover:text-orange-500 transition-colors"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(item.meal_id)}
+                      className="text-zinc-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xl font-black text-orange-600">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-orange-500 mb-1">
-                  {item.category.category_name}
-                </p>
-                <p className="text-sm text-zinc-500 line-clamp-1 italic mb-4">
-                  {item.provider.providerProfile.restaurant_name}
-                </p>
-
-                <div className="flex items-center justify-center sm:justify-start gap-6">
-                  {/* Qty Toggle */}
-                  <div className="flex items-center gap-4 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2">
-                    <button
-                      onClick={() => updateQuantity(item.id, -1)}
-                      className="text-zinc-500 hover:text-orange-600 transition-colors"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-4 text-center text-sm font-bold">
-                      {item.quantity}
-                    </span>
-                    <button
-                      onClick={() => updateQuantity(item.id, 1)}
-                      className="text-zinc-500 hover:text-orange-600 transition-colors"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Remove
-                  </button>
-                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Checkout Summary */}
+        {/* Right Side: Delivery Form & Checkout Summary */}
         <div className="lg:col-span-5">
-          <div className="rounded-[2.5rem] bg-zinc-50 p-10 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl shadow-zinc-200/50 dark:shadow-none">
-            <h2 className="text-2xl font-bold mb-8">Summary</h2>
+          <div className="rounded-[2.5rem] bg-zinc-50 p-8 lg:p-10 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-xl sticky top-24">
+            <h2 className="text-2xl font-bold mb-8">Delivery Details</h2>
 
-            <div className="space-y-6 text-md">
-              <div className="flex justify-between text-zinc-500">
-                <span>Items Subtotal</span>
-                <span className="font-bold text-zinc-900 dark:text-white">
+            <form
+              id="checkout-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                form.handleSubmit();
+              }}
+              className="space-y-6"
+            >
+              <form.Field
+                name="delivery_address"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
+
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+                        Address
+                      </FieldLabel>
+                      <Input
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="12 No Road, Dhanmondi"
+                        className="rounded-2xl h-12"
+                      />
+                      {isInvalid && (
+                        <FieldError
+                          errors={field.state.meta.errors}
+                          className="text-red-500 text-xs mt-1"
+                        />
+                      )}
+                    </Field>
+                  );
+                }}
+              />
+              <form.Field
+                name="phone_number"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched &&
+                    field.state.meta.errors.length > 0;
+
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+                        Phone
+                      </FieldLabel>
+                      <Input
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="01XXXXXXXXX"
+                        className="rounded-2xl h-12"
+                      />
+                      {isInvalid && (
+                        <FieldError
+                          errors={field.state.meta.errors}
+                          className="text-red-500 text-xs mt-1"
+                        />
+                      )}
+                    </Field>
+                  );
+                }}
+              />
+            </form>
+
+            <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-8" />
+
+            <div className="space-y-4">
+              <div className="flex justify-between text-zinc-500 font-medium">
+                <span>Subtotal</span>
+                <span className="text-zinc-900 dark:text-white">
                   ${subtotal.toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between text-zinc-500">
-                <span>Tax (8%)</span>
-                <span className="font-bold text-zinc-900 dark:text-white">
-                  ${tax.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between text-zinc-500">
-                <span>Delivery Fee</span>
-                <span className="font-bold text-zinc-900 dark:text-white">
-                  ${deliveryFee.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-6" />
-
-              <div className="flex justify-between text-2xl font-black">
+              <div className="flex justify-between text-3xl font-black pt-4">
                 <span>Total</span>
-                <span className="text-orange-600">${total.toFixed(2)}</span>
+                <span className="text-orange-600">${subtotal.toFixed(2)}</span>
               </div>
             </div>
 
-            <Button className="w-full mt-10 bg-orange-500 hover:bg-orange-600 h-16 text-lg font-black rounded-2xl shadow-lg shadow-orange-500/30 transition-all active:scale-[0.98]">
-              Checkout Now
-            </Button>
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button
+                  form="checkout-form"
+                  type="submit"
+                  disabled={!canSubmit || isSubmitting}
+                  className="w-full mt-10 bg-orange-500 hover:bg-orange-600 h-16 text-lg font-black rounded-2xl shadow-lg shadow-orange-500/30 transition-all active:scale-[0.98] disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Processing...' : 'Place Order'}
+                </Button>
+              )}
+            />
 
             <div className="mt-8 flex items-center justify-center gap-2 text-zinc-400">
               <ShieldCheck className="h-4 w-4" />
-              <span className="text-[10px] font-medium uppercase tracking-widest">
-                Secure Payment Powered by Stripe
+              <span className="text-[10px] tracking-widest font-bold uppercase">
+                Secure Checkout
               </span>
             </div>
           </div>
