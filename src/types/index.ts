@@ -43,6 +43,24 @@ export interface orderData {
   phone_number: string;
 }
 
+export interface CustomerOrders {
+  order_id: string;
+  meal: {
+    meal_name: string;
+  };
+  providerProfile: {
+    restaurant_name: string;
+    phone_number: string;
+  };
+  quantity: string;
+  total_price: number;
+  order_status: string;
+  order_method: string;
+  delivery_address: string;
+  phone_number: string;
+  createdAt: string;
+}
+
 export enum OrderStatus {
   pending = 'PENDING',
   preparing = 'PREPARING',

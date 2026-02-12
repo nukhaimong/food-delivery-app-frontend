@@ -52,26 +52,52 @@ export const orderService = {
       return { data: null, error: { message: 'Failed To Fetch Orders' } };
     }
   },
-  updateOrder: async (order_id: string, orderStatus: OrderStatus) => {
+  getOrderById: async () => {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${APP_URL}/order/update${order_id}`, {
+      const res = await fetch(`${APP_URL}/order/customer/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        cache: 'no-cache',
+      });
+
+      if (!res.ok) {
+        return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+      }
+      const orders = await res.json();
+      return { data: orders, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+    }
+  },
+  updateOrderStatusByCustomer: async (
+    order_id: string,
+    order_status: OrderStatus,
+  ) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/order/update/${order_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Cookie: cookieStore.toString(),
         },
-        body: JSON.stringify(orderStatus),
+        body: JSON.stringify({ order_status }),
         cache: 'no-cache',
       });
+
       if (!res.ok) {
-        return { data: null, error: { message: 'Order Creation Failed' } };
+        return { data: null, error: { message: 'Failed To Fetch Your Order' } };
       }
-      const updateOrder = await res.json();
-      return { data: updateOrder, error: null };
+      const orders = await res.json();
+      return { data: orders, error: null };
     } catch (error) {
-      return { data: null, error: { message: 'Order Creation Failed' } };
+      return { data: null, error: { message: 'Failed To Fetch Your Order' } };
     }
   },
 };

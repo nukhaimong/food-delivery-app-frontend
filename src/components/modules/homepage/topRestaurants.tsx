@@ -14,7 +14,7 @@ interface TopRestaurantsSectionProps {
   restaurants: Restaurant[];
 }
 
-export default function TopRestaurantsSection({
+export default function TopRestaurants({
   restaurants,
 }: TopRestaurantsSectionProps) {
   return (

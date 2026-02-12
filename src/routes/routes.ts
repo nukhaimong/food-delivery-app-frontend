@@ -10,7 +10,7 @@ export const userRoutes: Routes[] = [
       },
       {
         title: 'Track Your Order',
-        url: '/user-dashboard/my-order',
+        url: '/user-dashboard/my-orders',
       },
     ],
   },
@@ -30,7 +30,7 @@ export const providerRoutes: Routes[] = [
       },
       {
         title: 'See Orders',
-        url: '/provider-dashboard/orders',
+        url: '/provider-dashboard/my-orders',
       },
     ],
   },

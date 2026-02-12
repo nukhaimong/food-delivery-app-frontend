@@ -1,7 +1,7 @@
 'use server';
 
 import { orderService } from '@/services/order.service';
-import { orderData } from '@/types';
+import { orderData, OrderStatus } from '@/types';
 
 export const createOrder = async (data: orderData[]) => {
   return await orderService.createOrder(data);
@@ -9,4 +9,14 @@ export const createOrder = async (data: orderData[]) => {
 
 export const getOrderByProviderId = async () => {
   return await orderService.getOrderByProviderId();
+};
+
+export const getCustomerOrders = async () => {
+  return await orderService.getOrderById();
+};
+export const updateOrderStatusByCustomer = async (
+  order_id: string,
+  order_status: OrderStatus,
+) => {
+  return await orderService.updateOrderStatusByCustomer(order_id, order_status);
 };

@@ -1,7 +1,12 @@
-export default function Restaurants() {
+import TopRestaurants from '@/components/modules/homepage/topRestaurants';
+import { providerService } from '@/services/provider.service';
+
+export default async function AllRestaurants() {
+  const { data: providers } = await providerService.getProvidersProfiles();
+  const providersData = providers.allProvidersProfiles;
   return (
     <div>
-      <h1>Choose your fevourite restuarants</h1>
+      <TopRestaurants restaurants={providersData} />
     </div>
   );
 }
