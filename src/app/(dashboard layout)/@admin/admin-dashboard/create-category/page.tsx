@@ -1,6 +1,6 @@
 'use client';
 
-import { createCategory } from '@/actions/user.action';
+import { createCategory } from '@/actions/category.action';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';

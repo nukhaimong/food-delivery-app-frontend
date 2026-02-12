@@ -18,6 +18,14 @@ export interface Meal {
   };
 }
 
+export interface PostMealData {
+  meal_name: string;
+  image_url: string;
+  description: string;
+  price: number;
+  category_id: string;
+}
+
 export interface CartMeal {
   meal_id: string;
   meal_name: string;

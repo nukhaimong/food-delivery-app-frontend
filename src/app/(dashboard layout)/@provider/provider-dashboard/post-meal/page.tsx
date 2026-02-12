@@ -1,6 +1,6 @@
 'use client';
+import { getCategory } from '@/actions/category.action';
 import { createMeal } from '@/actions/meal.action';
-import { getCategory } from '@/actions/user.action';
 import { Button } from '@/components/ui/button';
 import {
   Field,

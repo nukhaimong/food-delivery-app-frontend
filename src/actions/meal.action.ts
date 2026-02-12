@@ -1,8 +1,8 @@
 'use server';
 
 import { mealService } from '@/services/meal.service';
-import { MealData } from '@/types';
+import { PostMealData } from '@/types';
 
-export const createMeal = async (data: MealData) => {
+export const createMeal = async (data: PostMealData) => {
   return await mealService.createMeal(data);
 };

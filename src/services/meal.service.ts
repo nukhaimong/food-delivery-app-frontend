@@ -1,4 +1,4 @@
-import { MealData } from '@/types';
+import { Meal, PostMealData } from '@/types';
 import { cookies } from 'next/headers';
 
 const APP_URL = process.env.APP_URL;
@@ -29,7 +29,7 @@ export const mealService = {
     try {
       const cookieStore = await cookies();
 
-      const res = await fetch(`${APP_URL}/${meal_id}`, {
+      const res = await fetch(`${APP_URL}/meals${meal_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,28 @@ export const mealService = {
       return { data: null, error: { message: 'Internal Server Error' } };
     }
   },
-  createMeal: async (data: MealData) => {
+  getMealByProviderId: async (provider_id: string) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/meals/provider/${provider_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        cache: 'no-cache',
+      });
+      if (!res.ok) {
+        return { data: null, error: { message: 'Meal Fetch failed' } };
+      }
+      const meals = await res.json();
+      return { data: meals, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Internal Server Error' } };
+    }
+  },
+  createMeal: async (data: PostMealData) => {
     try {
       const cookieStore = await cookies();
 

@@ -64,13 +64,14 @@ const Navbar = ({
       url: '/restaurants',
     },
     {
+      title: 'Cuisines',
+      url: '/cuisines',
+    },
+    {
       title: 'Explore Foods',
       url: '/foods',
     },
-    {
-      title: 'About Us',
-      url: '/about-us',
-    },
+
     {
       title: 'Dashboard',
       url: '/user-dashboard',

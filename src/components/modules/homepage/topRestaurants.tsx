@@ -8,6 +8,7 @@ export interface Restaurant {
   restaurant_image: string;
   phone_number: string;
   address: string;
+  provider_id: string;
 }
 
 interface TopRestaurantsSectionProps {
@@ -35,7 +36,7 @@ export default function TopRestaurants({
           {restaurants
             .map((restaurant) => (
               <Link
-                href={`/restaurants/${restaurant.id}`}
+                href={`/restaurants/${restaurant.provider_id}`}
                 key={restaurant.id}
                 className="group flex flex-col overflow-hidden rounded-[2rem] border border-zinc-100 bg-zinc-50/50 transition-all duration-300 hover:bg-white hover:shadow-2xl hover:shadow-zinc-200 dark:border-zinc-800 dark:bg-zinc-900/50 dark:hover:bg-zinc-900 dark:hover:shadow-none"
               >
