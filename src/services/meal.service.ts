@@ -67,6 +67,27 @@ export const mealService = {
       return { data: null, error: { message: 'Internal Server Error' } };
     }
   },
+  getMealByCategoryId: async (category_id: string) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/meals/category/${category_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        cache: 'no-cache',
+      });
+      if (!res.ok) {
+        return { data: null, error: { message: 'Meal Fetch failed' } };
+      }
+      const meals = await res.json();
+      return { data: meals, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Internal Server Error' } };
+    }
+  },
   createMeal: async (data: PostMealData) => {
     try {
       const cookieStore = await cookies();
