@@ -23,6 +23,7 @@ import { ModeToggle } from './modeToggle';
 import Link from 'next/link';
 import CartButton from '../modules/cart/cart';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import NavProfile from '../navProfile';
 
 interface MenuItem {
   title: string;
@@ -50,6 +51,7 @@ interface Navbar1Props {
       url: string;
     };
   };
+  profile: React.ReactNode;
 }
 
 const Navbar = ({
@@ -82,6 +84,7 @@ const Navbar = ({
     signup: { title: 'Sign up', url: 'sign-up' },
   },
   className,
+  profile,
 }: Navbar1Props) => {
   return (
     <section className={cn('py-4', className)}>
@@ -114,12 +117,7 @@ const Navbar = ({
             <Button asChild size="sm">
               <a href={auth.signup.url}>{auth.signup.title}</a>
             </Button>
-            <Link href="/profile">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </Link>
+            <Link href="/profile">{profile}</Link>
           </div>
         </nav>
 
@@ -164,10 +162,7 @@ const Navbar = ({
                     </Button>
                     <div className="flex justify-around items-center bg-gray-900 p-1 rounded-xl border border-gray-500">
                       <p className="text-xl">Profile</p>
-                      <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
+                      <Link href="/profile">{profile}</Link>
                     </div>
                   </div>
                 </div>

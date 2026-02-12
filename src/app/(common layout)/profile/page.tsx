@@ -7,6 +7,7 @@ import { userService } from '@/services/user.service';
 
 export default async function Profile() {
   const { data } = await userService.getSession();
+  console.log(data);
   const { data: provider } = await providerService.getProviderById(
     data.user.id,
   );

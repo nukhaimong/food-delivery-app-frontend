@@ -9,7 +9,6 @@ export default async function Home() {
   const { data } = await categoryService.getCategory();
   const { data: mealData } = await mealService.getMeal();
   const { data: providers } = await providerService.getProvidersProfiles();
-  console.log(providers);
 
   const providersData = providers.allProvidersProfiles;
   const categories = data.category;
