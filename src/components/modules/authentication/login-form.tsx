@@ -21,6 +21,7 @@ import * as z from 'zod';
 import { useForm } from '@tanstack/react-form';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
+import { useCartStore } from '@/store/useCartStore';
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
@@ -43,6 +44,11 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
         const { data, error } = await authClient.signIn.email({
           ...value,
           callbackURL: 'http://localhost:3000',
+          fetchOptions: {
+            onSuccess: () => {
+              useCartStore.persist.clearStorage();
+            },
+          },
         });
         if (error) {
           toast.error(error.message, { id: toastId });

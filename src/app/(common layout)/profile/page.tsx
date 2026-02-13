@@ -8,17 +8,18 @@ import { userService } from '@/services/user.service';
 export default async function Profile() {
   const { data } = await userService.getSession();
   console.log(data);
-  const { data: provider } = await providerService.getProviderById(
-    data.user.id,
+  const { data: providerData } = await providerService.getProviderById(
+    data?.user?.id,
   );
+  const provider = providerData?.provider;
   const providerInfo = {
-    role: provider.provider.user_role,
-    name: provider.provider.name,
-    profileImage: provider.provider.image,
-    address: provider.provider.providerProfile?.address,
-    restaurantImage: provider.provider.providerProfile?.restaurant_image,
-    restaurantName: provider.provider.providerProfile?.restaurant_name,
-    phone: provider.provider.providerProfile?.phone_number,
+    role: provider.user_role,
+    name: provider.name,
+    profileImage: provider.image,
+    address: provider.providerProfile?.address,
+    restaurantImage: provider.providerProfile?.restaurant_image,
+    restaurantName: provider.providerProfile?.restaurant_name,
+    phone: provider.providerProfile?.phone_number,
   };
   if (
     data.user.user_role !== Roles.user &&

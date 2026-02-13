@@ -22,8 +22,8 @@ import {
 import { ModeToggle } from './modeToggle';
 import Link from 'next/link';
 import CartButton from '../modules/cart/cart';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import NavProfile from '../navProfile';
+import { useCartStore } from '@/store/useCartStore';
+import { authClient } from '@/lib/auth-client';
 
 interface MenuItem {
   title: string;
@@ -46,12 +46,16 @@ interface Navbar1Props {
       title: string;
       url: string;
     };
+    logout: {
+      title: string;
+    };
     signup: {
       title: string;
       url: string;
     };
   };
   profile: React.ReactNode;
+  session: {};
 }
 
 const Navbar = ({
@@ -81,10 +85,12 @@ const Navbar = ({
   ],
   auth = {
     login: { title: 'Login', url: '/log-in' },
+    logout: { title: 'Logout' },
     signup: { title: 'Sign up', url: 'sign-up' },
   },
   className,
   profile,
+  session,
 }: Navbar1Props) => {
   return (
     <section className={cn('py-4', className)}>
@@ -111,13 +117,33 @@ const Navbar = ({
           <div className="flex gap-2">
             <ModeToggle />
             <CartButton />
-            <Button asChild variant="outline" size="sm">
-              <a href={auth.login.url}>{auth.login.title}</a>
-            </Button>
+            {session !== undefined ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  useCartStore.persist.clearStorage();
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        window.location.href = '/';
+                      },
+                    },
+                  });
+                }}
+              >
+                {auth.logout.title}
+              </Button>
+            ) : (
+              <Button asChild variant="outline" size="sm">
+                <a href={auth.login.url}>{auth.login.title}</a>
+              </Button>
+            )}
+
             <Button asChild size="sm">
               <a href={auth.signup.url}>{auth.signup.title}</a>
             </Button>
-            <Link href="/profile">{profile}</Link>
+            {session !== undefined && <Link href="/profile">{profile}</Link>}
           </div>
         </nav>
 
@@ -154,15 +180,36 @@ const Navbar = ({
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
                     <CartButton />
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
+                    {session !== undefined ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={async () => {
+                          useCartStore.persist.clearStorage();
+                          await authClient.signOut({
+                            fetchOptions: {
+                              onSuccess: () => {
+                                window.location.href = '/';
+                              },
+                            },
+                          });
+                        }}
+                      >
+                        {auth.logout.title}
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm">
+                        <a href={auth.login.url}>{auth.login.title}</a>
+                      </Button>
+                    )}
                     <Button asChild>
                       <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
                     <div className="flex justify-around items-center bg-gray-900 p-1 rounded-xl border border-gray-500">
                       <p className="text-xl">Profile</p>
-                      <Link href="/profile">{profile}</Link>
+                      {session !== undefined && (
+                        <Link href="/profile">{profile}</Link>
+                      )}
                     </div>
                   </div>
                 </div>
