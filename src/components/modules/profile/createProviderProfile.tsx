@@ -2,7 +2,12 @@
 
 import { createProviderProfile } from '@/actions/provider.action';
 import { Button } from '@/components/ui/button';
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { uploadToCloudinary } from '@/lib/uploadToCloudinary';
 import { useForm } from '@tanstack/react-form';
@@ -13,10 +18,10 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 
 const providerSchema = z.object({
-  restaurantName: z.string(),
-  restaurantImageUrl: z.string(),
-  address: z.string(),
-  phone: z.string(),
+  restaurantName: z.string().min(1, 'Restaurant name is required'),
+  restaurantImageUrl: z.string().min(1, 'image is required'),
+  address: z.string().min(1, 'Address is required'),
+  phone: z.string().min(1, 'Phone number is required'),
 });
 
 export default function CreateProviderProfile() {
@@ -79,8 +84,10 @@ export default function CreateProviderProfile() {
           <form.Field
             name="restaurantName"
             children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Restaurant Name</FieldLabel>
                   <Input
                     type="text"
@@ -88,6 +95,7 @@ export default function CreateProviderProfile() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}
@@ -95,8 +103,10 @@ export default function CreateProviderProfile() {
           <form.Field
             name="address"
             children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Restaurant Address</FieldLabel>
                   <Input
                     type="text"
@@ -104,6 +114,7 @@ export default function CreateProviderProfile() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}
@@ -111,8 +122,10 @@ export default function CreateProviderProfile() {
           <form.Field
             name="phone"
             children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Phone Number</FieldLabel>
                   <Input
                     type="text"
@@ -120,21 +133,37 @@ export default function CreateProviderProfile() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}
           />
-          <FieldLabel>Choose Your Image</FieldLabel>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              setSelectedImage(file);
-              setPreview(URL.createObjectURL(file));
+          <form.Field
+            name="restaurantImageUrl"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel>Choose Your Image</FieldLabel>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setSelectedImage(file);
+                      setPreview(URL.createObjectURL(file));
+
+                      field.handleChange(file.name);
+                    }}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
             }}
           />
+
           {preview && (
             <div className="mt-5 flex justify-start">
               <div className="relative h-30 w-30 overflow-hidden  border-2 border-muted shadow-md transition hover:shadow-lg">

@@ -39,7 +39,7 @@ export default function UpdateUserProfile() {
           imageUrl = await uploadToCloudinary(selectedImage);
           toast.dismiss();
         }
-        console.log(value.name, imageUrl);
+
         const res = await updateUser(imageUrl, value.name);
 
         if (res?.error) {
@@ -47,6 +47,7 @@ export default function UpdateUserProfile() {
           return;
         }
         toast.success('Profile Updated Successfully');
+        form.reset();
         setPreview(null);
         setSelectedImage(null);
         router.refresh();
