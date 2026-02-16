@@ -52,7 +52,7 @@ export const orderService = {
       return { data: null, error: { message: 'Failed To Fetch Orders' } };
     }
   },
-  getOrderById: async () => {
+  getOrderByCustomerId: async () => {
     try {
       const cookieStore = await cookies();
 

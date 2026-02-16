@@ -3,15 +3,22 @@
 import { useEffect, useState } from 'react';
 import {
   Package,
-  MapPin,
-  Phone,
   CheckCircle,
   Clock,
   Banknote,
-  ClipboardList,
   Loader2,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { OrderStatus } from '@/types';
 
@@ -23,7 +30,7 @@ interface Order {
   delivery_address: string;
   phone_number: string;
   total_price: number;
-  order_status: OrderStatus; // Use the enum here
+  order_status: OrderStatus;
   order_method: string;
   createdAt: string;
 }
@@ -65,7 +72,6 @@ export default function ProviderOrdersPage() {
 
       if (res.ok) {
         toast.success(`Order updated to ${newStatus}`);
-        // Refresh data to show latest status
         await fetchData();
       } else {
         toast.error('Failed to update order');
@@ -85,140 +91,180 @@ export default function ProviderOrdersPage() {
   }, []);
 
   return (
-    <div className="p-6 lg:p-12 bg-zinc-50 dark:bg-zinc-950 min-h-screen mt-16">
-      <div className="max-w-6xl mx-auto">
+    <div className="p-6 lg:p-12 bg-zinc-50 dark:bg-zinc-950 min-h-screen mt-16 w-full">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">
               MY<span className="text-orange-500 text-6xl">.</span>KITCHEN
             </h1>
             <p className="text-xl text-zinc-500 font-medium mt-2">
-              Manage your live orders
+              Live Order Management
             </p>
           </div>
-          <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-2 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800">
-            <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-sm font-bold uppercase tracking-widest text-zinc-400">
-              Live Feed
+          <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 px-4 py-2 rounded-full shadow-sm border border-zinc-100 dark:border-zinc-800">
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+              Auto-refreshing
             </span>
           </div>
         </div>
 
-        {/* Orders List */}
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div
-              key={order.order_id}
-              className="bg-white dark:bg-zinc-900 rounded-[2.5rem] border-2 border-zinc-100 dark:border-zinc-800 p-8 shadow-xl"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* 1. Details Section */}
-                <div className="lg:col-span-4 space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-orange-500 text-white p-3 rounded-2xl">
-                      <Package size={24} />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-black dark:text-white uppercase">
-                        #{order.order_id.slice(0, 8)}
-                      </h2>
-                      <div className="flex items-center gap-2 text-zinc-500 text-sm font-bold">
-                        <Clock size={14} />
+        {/* Orders Table */}
+        <div className="bg-white dark:bg-zinc-900 rounded-sm border border-zinc-200 dark:border-zinc-800 shadow-xl overflow-hidden">
+          <Table>
+            <TableHeader className="bg-zinc-50 dark:bg-zinc-800/50">
+              <TableRow className="hover:bg-transparent border-zinc-200 dark:border-zinc-800">
+                <TableHead className="w-[120px] font-black uppercase text-[10px] tracking-widest">
+                  Order ID
+                </TableHead>
+                <TableHead className="font-black uppercase text-[10px] tracking-widest">
+                  Time & Items
+                </TableHead>
+                <TableHead className="font-black uppercase text-[10px] tracking-widest">
+                  Customer & Address
+                </TableHead>
+                <TableHead className="font-black uppercase text-[10px] tracking-widest">
+                  Revenue
+                </TableHead>
+                <TableHead className="font-black uppercase text-[10px] tracking-widest">
+                  Status
+                </TableHead>
+                <TableHead className="text-right font-black uppercase text-[10px] tracking-widest">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow
+                  key={order.order_id}
+                  className="border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors"
+                >
+                  {/* ID */}
+                  <TableCell className="font-bold font-mono text-orange-600">
+                    #{order.order_id.slice(0, 8)}
+                  </TableCell>
+
+                  {/* Time & Quantity */}
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-zinc-900 dark:text-zinc-100 font-bold">
+                        <Clock size={14} className="text-zinc-400" />
                         {new Date(order.createdAt).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
                       </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 text-sm font-bold text-zinc-500 uppercase tracking-tight">
-                    <span className="flex items-center gap-1">
-                      <ClipboardList size={16} /> {order.quantity} Items
-                    </span>
-                    <span className="flex items-center gap-1 text-orange-600 font-black">
-                      <Banknote size={16} /> ${order.total_price}
-                    </span>
-                  </div>
-                </div>
-
-                {/* 2. Customer Info */}
-                <div className="lg:col-span-4 bg-zinc-50 dark:bg-zinc-800/50 p-5 rounded-3xl">
-                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">
-                    Delivery Address
-                  </p>
-                  <p className="text-sm font-bold text-zinc-900 dark:text-zinc-200 line-clamp-1 mb-3">
-                    {order.delivery_address}
-                  </p>
-                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">
-                    Customer Phone
-                  </p>
-                  <p className="text-lg font-black text-orange-600">
-                    {order.phone_number}
-                  </p>
-                </div>
-
-                {/* 3. Status & Action Section */}
-                <div className="lg:col-span-4 flex items-center justify-between pl-4 border-l border-zinc-100 dark:border-zinc-800">
-                  <div className="text-left">
-                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">
-                      Current Status
-                    </p>
-                    <span className="text-lg font-black uppercase text-orange-500 animate-pulse">
-                      {order.order_status}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-2 min-w-[160px]">
-                    {order.order_status === OrderStatus.pending && (
-                      <Button
-                        onClick={() =>
-                          updateOrderStatus(
-                            order.order_id,
-                            OrderStatus.preparing,
-                          )
-                        }
-                        disabled={loadingId === order.order_id}
-                        className="bg-zinc-900 dark:bg-white dark:text-zinc-900 text-white font-black rounded-xl h-12 hover:scale-105 transition-transform"
-                      >
-                        {loadingId === order.order_id ? (
-                          <Loader2 className="animate-spin" />
-                        ) : (
-                          'PREPARING'
-                        )}
-                      </Button>
-                    )}
-
-                    {(order.order_status === OrderStatus.pending ||
-                      order.order_status === OrderStatus.preparing) && (
-                      <Button
-                        onClick={() =>
-                          updateOrderStatus(
-                            order.order_id,
-                            OrderStatus.delivered,
-                          )
-                        }
-                        disabled={loadingId === order.order_id}
-                        className="bg-green-600 hover:bg-green-700 text-white font-black rounded-xl h-12 hover:scale-105 transition-transform"
-                      >
-                        {loadingId === order.order_id ? (
-                          <Loader2 className="animate-spin" />
-                        ) : (
-                          'DELIVERED'
-                        )}
-                      </Button>
-                    )}
-
-                    {order.order_status === OrderStatus.delivered && (
-                      <div className="flex items-center gap-2 text-green-600 font-black justify-center py-2 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                        <CheckCircle size={18} /> COMPLETE
+                      <div className="text-xs text-zinc-500 font-medium px-5">
+                        {order.quantity}{' '}
+                        {order.quantity === 1 ? 'Item' : 'Items'}
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+                    </div>
+                  </TableCell>
+
+                  {/* Customer Info */}
+                  <TableCell className="max-w-[250px]">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                        {order.delivery_address}
+                      </div>
+                      <div className="text-xs font-black text-orange-500">
+                        {order.phone_number}
+                      </div>
+                    </div>
+                  </TableCell>
+
+                  {/* Price */}
+                  <TableCell>
+                    <div className="flex items-center gap-1 font-black text-zinc-900 dark:text-white">
+                      <Banknote size={16} className="text-green-600" />$
+                      {order.total_price.toFixed(2)}
+                    </div>
+                  </TableCell>
+
+                  {/* Status Badge */}
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className={`font-black text-[10px] px-3 py-1 rounded-full border-2 uppercase ${
+                        order.order_status === OrderStatus.pending
+                          ? 'border-amber-500 text-amber-500 animate-pulse'
+                          : order.order_status === OrderStatus.preparing
+                            ? 'border-blue-500 text-blue-500'
+                            : 'border-green-500 text-green-500'
+                      }`}
+                    >
+                      {order.order_status}
+                    </Badge>
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      {order.order_status === OrderStatus.pending && (
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            updateOrderStatus(
+                              order.order_id,
+                              OrderStatus.preparing,
+                            )
+                          }
+                          disabled={loadingId === order.order_id}
+                          className="bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 text-white font-bold h-9 rounded-lg"
+                        >
+                          {loadingId === order.order_id ? (
+                            <Loader2 className="animate-spin h-4 w-4" />
+                          ) : (
+                            'PREPARE'
+                          )}
+                        </Button>
+                      )}
+
+                      {(order.order_status === OrderStatus.pending ||
+                        order.order_status === OrderStatus.preparing) && (
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            updateOrderStatus(
+                              order.order_id,
+                              OrderStatus.delivered,
+                            )
+                          }
+                          disabled={loadingId === order.order_id}
+                          className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 rounded-lg"
+                        >
+                          {loadingId === order.order_id ? (
+                            <Loader2 className="animate-spin h-4 w-4" />
+                          ) : (
+                            'DELIVER'
+                          )}
+                        </Button>
+                      )}
+
+                      {order.order_status === OrderStatus.delivered && (
+                        <div className="flex items-center gap-1 text-green-600 font-black text-xs pr-2">
+                          <CheckCircle size={16} /> DONE
+                        </div>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {orders.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="h-48 text-center text-zinc-500 font-medium"
+                  >
+                    No active orders found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>

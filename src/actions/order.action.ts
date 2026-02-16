@@ -12,7 +12,7 @@ export const getOrderByProviderId = async () => {
 };
 
 export const getCustomerOrders = async () => {
-  return await orderService.getOrderById();
+  return await orderService.getOrderByCustomerId();
 };
 export const updateOrderStatusByCustomer = async (
   order_id: string,

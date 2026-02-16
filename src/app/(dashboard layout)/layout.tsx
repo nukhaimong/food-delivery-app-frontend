@@ -17,7 +17,7 @@ export default async function DashBoardLayout({
   let userRole = data.user.user_role;
 
   return (
-    <SidebarProvider className="gap-24">
+    <SidebarProvider className="gap-8">
       <AppSidebar userRole={userRole} />
       {userRole === Roles.provider
         ? provider
