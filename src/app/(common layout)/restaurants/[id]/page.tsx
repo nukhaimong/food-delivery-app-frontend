@@ -1,4 +1,5 @@
 import FoodMeals from '@/components/modules/Restaurants/foodMeals';
+import NoMealsState from '@/components/modules/Restaurants/noMealState';
 import { mealService } from '@/services/meal.service';
 
 export default async function AllFoodOfRestaurant({
@@ -8,7 +9,11 @@ export default async function AllFoodOfRestaurant({
 }) {
   const { id } = await params;
   const { data } = await mealService.getMealByProviderId(id);
-  const meals = data.meals;
+  const meals = data?.meals;
+
+  if (!meals) {
+    return <NoMealsState />;
+  }
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">

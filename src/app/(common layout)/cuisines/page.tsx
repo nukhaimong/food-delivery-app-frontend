@@ -3,7 +3,7 @@ import { categoryService } from '@/services/category.service';
 
 export default async function Cuisines() {
   const { data } = await categoryService.getCategory();
-  const categories = data.category;
+  const categories = data?.category;
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">

@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl grid gap-8 sm:grid-cols-2 md:grid-cols-4 text-shadow-white">
         {/* Company Info */}
         <div>
-          <h3 className="mb-4 text-lg font-bold">FoodExpress</h3>
+          <h3 className="mb-4 text-lg font-bold">Haang</h3>
           <p className="text-sm text-muted-foreground">
             Delivering your favorite meals fast and fresh.
           </p>
@@ -23,10 +23,10 @@ export default function Footer() {
               <Link href="/restaurants">Restaurants</Link>
             </li>
             <li>
-              <Link href="/about">About Us</Link>
+              <Link href="/cuisines">Cuisines</Link>
             </li>
             <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/foods">Foods</Link>
             </li>
           </ul>
         </div>

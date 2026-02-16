@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { uploadToCloudinary } from '@/lib/uploadToCloudinary';
 import { useForm } from '@tanstack/react-form';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -19,6 +20,7 @@ const providerSchema = z.object({
 });
 
 export default function CreateProviderProfile() {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -51,6 +53,10 @@ export default function CreateProviderProfile() {
           return;
         }
         toast.success('Profile Created Successfully');
+        form.reset();
+        setPreview(null);
+        setSelectedImage(null);
+        router.refresh();
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { uploadToCloudinary } from '@/lib/uploadToCloudinary';
 import { useForm } from '@tanstack/react-form';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -17,6 +18,7 @@ const userSchema = z.object({
 });
 
 export default function UpdateUserProfile() {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -39,13 +41,15 @@ export default function UpdateUserProfile() {
         }
         console.log(value.name, imageUrl);
         const res = await updateUser(imageUrl, value.name);
-        console.log(res);
 
         if (res?.error) {
           toast.error('Profile Update Failed');
           return;
         }
         toast.success('Profile Updated Successfully');
+        setPreview(null);
+        setSelectedImage(null);
+        router.refresh();
       } catch (error) {
         console.error(error);
         toast.error('Something went wrong');
