@@ -8,7 +8,7 @@ export default async function Cuisines() {
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Decorative background element */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[40vh] bg-gradient-to-b from-orange-50 to-transparent dark:from-orange-950/10 pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[40vh]   pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-6 py-16">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">

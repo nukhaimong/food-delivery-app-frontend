@@ -6,7 +6,9 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl grid gap-8 sm:grid-cols-2 md:grid-cols-4 text-shadow-white">
         {/* Company Info */}
         <div>
-          <h3 className="mb-4 text-lg font-bold">Haang</h3>
+          <Link href="/">
+            <h3 className="mb-4 text-lg font-bold">Haang</h3>
+          </Link>
           <p className="text-sm text-muted-foreground">
             Delivering your favorite meals fast and fresh.
           </p>
@@ -60,7 +62,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-12 border-t border-gray-200 pt-6 text-center text-sm text-muted-foreground">
-        &copy; {new Date().getFullYear()} FoodExpress. All rights reserved.
+        &copy; {new Date().getFullYear()} Haang. All rights reserved.
       </div>
     </footer>
   );

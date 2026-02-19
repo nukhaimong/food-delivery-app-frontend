@@ -14,7 +14,7 @@ export default async function DashBoardLayout({
   provider: React.ReactNode;
 }) {
   const { data } = await userService.getSession();
-  let userRole = data.user.user_role;
+  let userRole = data?.user?.user_role;
 
   return (
     <SidebarProvider className="gap-8">

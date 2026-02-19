@@ -13,8 +13,8 @@ export default async function Proxy(request: NextRequest) {
 
   if (data) {
     isAuthenticated = true;
-    isAdmin = data.user.user_role === Roles.admin;
-    isProvider = data.user.user_role == Roles.provider;
+    isAdmin = data?.user?.user_role === Roles.admin;
+    isProvider = data?.user?.user_role == Roles.provider;
   }
 
   if (!isAuthenticated) {

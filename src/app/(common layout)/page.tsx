@@ -10,9 +10,9 @@ export default async function Home() {
   const { data: mealData } = await mealService.getMeal();
   const { data: providers } = await providerService.getProvidersProfiles();
 
-  const providersData = providers.allProvidersProfiles;
-  const categories = data.category;
-  const meals = mealData.meals;
+  const providersData = providers?.allProvidersProfiles;
+  const categories = data?.category;
+  const meals = mealData?.meals;
 
   return (
     <div className="max-w-7xl mx-auto">

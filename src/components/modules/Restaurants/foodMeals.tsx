@@ -24,7 +24,7 @@ export default function FoodMeals({ meals }: MealsProps) {
       <div className="mx-auto max-w-7xl">
         {/* Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {meals.map((meal) => (
+          {meals?.map((meal) => (
             <div
               key={meal.id}
               className="group flex flex-col overflow-hidden rounded-3xl border border-zinc-100 bg-white transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 dark:border-zinc-800 dark:bg-zinc-900"

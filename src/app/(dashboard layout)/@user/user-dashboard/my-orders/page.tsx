@@ -35,7 +35,7 @@ export default function MyOrder() {
   const fetchOrders = async () => {
     try {
       const { data } = await getCustomerOrders();
-      setOrders(data.orders);
+      setOrders(data?.orders);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {

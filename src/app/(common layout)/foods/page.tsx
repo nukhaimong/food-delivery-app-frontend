@@ -3,7 +3,7 @@ import { mealService } from '@/services/meal.service';
 
 export default async function Foods() {
   const { data } = await mealService.getMeal();
-  const meals = data.meals;
+  const meals = data?.meals;
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
@@ -24,7 +24,7 @@ export default async function Foods() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-            Available Meals ({meals.length})
+            Available Meals ({meals?.length})
           </h2>
           {/* You could add a sort/filter dropdown here later */}
         </div>

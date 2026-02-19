@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function ProviderDashboard() {
   const { data } = await orderService.getOrderByProviderId();
-  const orders = data.orders;
+  const orders = data?.orders;
 
   // Aggregate total earnings safely
-  const totalEarnings = orders.reduce(
+  const totalEarnings = orders?.reduce(
     (sum: number, order: { total_price: number }): number => {
       return sum + order.total_price;
     },
@@ -17,14 +17,14 @@ export default async function ProviderDashboard() {
   const stats = [
     {
       title: 'Total Revenue',
-      value: `$${totalEarnings.toLocaleString()}`,
+      value: `$${totalEarnings?.toLocaleString()}`,
       icon: Banknote,
       color: 'text-green-600',
       bg: 'bg-green-50 dark:bg-green-900/20',
     },
     {
       title: 'Total Orders',
-      value: orders.length.toString(),
+      value: orders?.length.toString(),
       icon: ShoppingBag,
       color: 'text-orange-600',
       bg: 'bg-orange-50 dark:bg-orange-900/20',
@@ -32,7 +32,7 @@ export default async function ProviderDashboard() {
     {
       title: 'Avg. Order Value',
       value:
-        orders.length > 0
+        orders?.length > 0
           ? `$${(totalEarnings / orders.length).toFixed(2)}`
           : '$0',
       icon: TrendingUp,
@@ -56,7 +56,7 @@ export default async function ProviderDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {stats.map((stat) => (
+          {stats?.map((stat) => (
             <Card
               key={stat.title}
               className="border-none shadow-xl bg-white dark:bg-zinc-900 rounded-[2rem]"

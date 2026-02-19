@@ -50,7 +50,7 @@ export default function ProviderOrdersPage() {
       });
       if (res.ok) {
         const result = await res.json();
-        setOrders(result.orders);
+        setOrders(result?.orders);
       }
     } catch (err) {
       console.error('Fetch error:', err);

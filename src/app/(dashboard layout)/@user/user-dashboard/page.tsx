@@ -10,10 +10,10 @@ import { Badge } from '@/components/ui/badge';
 
 export default async function UserDashboard() {
   const { data } = await orderService.getOrderByCustomerId();
-  const orders = data.orders;
+  const orders = data?.orders;
 
   // Aggregate total spending
-  const totalSpent = orders.reduce(
+  const totalSpent = orders?.reduce(
     (sum: number, order: { total_price: number }): number => {
       return sum + order.total_price;
     },
@@ -23,14 +23,14 @@ export default async function UserDashboard() {
   const stats = [
     {
       title: 'Total Spent',
-      value: `$${totalSpent.toLocaleString()}`,
+      value: `$${totalSpent?.toLocaleString()}`,
       icon: CreditCard,
       color: 'text-orange-600',
       bg: 'bg-orange-50 dark:bg-orange-900/20',
     },
     {
       title: 'Meals Ordered',
-      value: orders.length.toString(),
+      value: orders?.length.toString(),
       icon: UtensilsCrossed,
       color: 'text-zinc-900 dark:text-white',
       bg: 'bg-zinc-100 dark:bg-zinc-800',
@@ -99,7 +99,7 @@ export default async function UserDashboard() {
             </h2>
           </div>
 
-          {orders.length > 0 ? (
+          {orders?.length > 0 ? (
             <div className="space-y-4">
               <p className="text-zinc-500 text-sm font-medium">
                 Your last order was a{' '}

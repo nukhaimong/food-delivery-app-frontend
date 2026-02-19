@@ -36,7 +36,7 @@ export default function PostMenu() {
         console.log(response.error.message);
       }
       if (response.data) {
-        setCategories(response.data.category);
+        setCategories(response?.data?.category);
       }
     }
     loadCategories();

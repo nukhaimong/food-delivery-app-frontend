@@ -19,8 +19,8 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import z from 'zod';
 import { createOrder } from '@/actions/order.action';
-import { useState } from 'react';
-import { Router } from 'next/router';
+import { useEffect, useState } from 'react';
+import { getSession } from '@/actions/user.action';
 
 const orderSchema = z.object({
   delivery_address: z
@@ -33,8 +33,17 @@ const orderSchema = z.object({
 
 export default function CartPage() {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+  const [user, setUser] = useState<
+    { id: string; user_role: string } | undefined
+  >(undefined);
+
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } =
     useCartStore();
+
+  const fetchUser = async () => {
+    const { data } = await getSession();
+    setUser(data?.user);
+  };
 
   const form = useForm({
     defaultValues: {
@@ -46,7 +55,19 @@ export default function CartPage() {
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading(`Sending your order to kictche...`);
+
       try {
+        if (!user?.id) {
+          toast.error("You're not authenticated. Please login.", {
+            id: toastId,
+          });
+          return;
+        } else if (user?.user_role !== 'USER') {
+          toast.error("You're not customer. You can't order food now", {
+            id: toastId,
+          });
+          return;
+        }
         const cartData = items.map((item) => ({
           providerProfile_id: item.provider.providerProfile.providerProfileId,
           meal_id: item.meal_id,
@@ -74,6 +95,10 @@ export default function CartPage() {
       }
     },
   });
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const subtotal = getTotalPrice();
 

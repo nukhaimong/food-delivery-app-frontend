@@ -44,14 +44,7 @@ export const adminRoutes: Routes[] = [
         title: 'Back to home',
         url: '/',
       },
-      {
-        title: 'See all Users',
-        url: '/admin-dashboard/all-users',
-      },
-      {
-        title: 'See All Providers',
-        url: '/admin-dashboard/all-providers',
-      },
+
       {
         title: 'Create Cuisine Category',
         url: '/admin-dashboard/create-category',
