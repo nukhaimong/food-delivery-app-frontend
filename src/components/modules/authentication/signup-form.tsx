@@ -47,9 +47,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         const { data, error } = await authClient.signUp.email({
           ...value,
           callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
-          fetchOptions: {
-            credentials: 'include',
-          },
         });
 
         if (error) {
