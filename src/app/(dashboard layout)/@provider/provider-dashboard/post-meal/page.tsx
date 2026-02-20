@@ -210,7 +210,7 @@ export default function PostMenu() {
                     <option value="" disabled>
                       select a category
                     </option>
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.category_name}
                       </option>

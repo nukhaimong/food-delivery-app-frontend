@@ -123,7 +123,7 @@ export default function MyOrder() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {orders?.map((order) => (
                 <TableRow
                   key={order.order_id}
                   className="border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50/50 transition-colors"

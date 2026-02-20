@@ -174,7 +174,7 @@ export default function CartPage() {
             Your Order
           </h1>
           <div className="space-y-8">
-            {items.map((item) => (
+            {items?.map((item) => (
               <div
                 key={item.meal_id}
                 className="flex items-center gap-6 pb-8 border-b border-zinc-100 dark:border-zinc-800"

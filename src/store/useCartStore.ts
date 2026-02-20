@@ -28,7 +28,7 @@ export const useCartStore = create<CartState>()(
 
         if (existingItem) {
           set({
-            items: currentItems.map((item) =>
+            items: currentItems?.map((item) =>
               item.meal_id === meal.meal_id
                 ? { ...item, quantity: item.quantity + 1 }
                 : item,
@@ -41,7 +41,7 @@ export const useCartStore = create<CartState>()(
 
       updateQuantity: (id, delta) => {
         set({
-          items: get().items.map((item) =>
+          items: get().items?.map((item) =>
             item.meal_id === id
               ? { ...item, quantity: Math.max(1, item.quantity + delta) }
               : item,

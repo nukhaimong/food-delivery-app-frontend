@@ -58,7 +58,7 @@ export default async function UserDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-          {stats.map((stat) => (
+          {stats?.map((stat) => (
             <Card
               key={stat.title}
               className="border-none shadow-xl bg-white dark:bg-zinc-900 rounded-[2rem] overflow-hidden"

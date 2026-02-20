@@ -18,7 +18,7 @@ export default function AllCategories({ categories }: CategoryProps) {
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {categories
-            .map((category) => (
+            ?.map((category) => (
               <Link href={`/cuisines/${category.id}`} key={category.id}>
                 <div className="group relative flex flex-col items-center">
                   {/* Image Circle Container */}
