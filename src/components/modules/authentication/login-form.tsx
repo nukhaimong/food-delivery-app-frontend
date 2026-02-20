@@ -43,7 +43,7 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
       try {
         const { data, error } = await authClient.signIn.email({
           ...value,
-          callbackURL: 'http://localhost:3000',
+          callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
           fetchOptions: {
             onSuccess: () => {
               useCartStore.persist.clearStorage();

@@ -46,7 +46,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signUp.email({
           ...value,
-          callbackURL: 'http://localhost:3000',
+          callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
         });
 
         if (error) {
