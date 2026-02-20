@@ -45,6 +45,7 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
           ...value,
           callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
           fetchOptions: {
+            credentials: 'include',
             onSuccess: () => {
               useCartStore.persist.clearStorage();
             },
