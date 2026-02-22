@@ -20,6 +20,9 @@ export const userService = {
         return { data: null, error: { message: 'Something Went Wrong' } };
       }
 
+      console.log('APP_URL: ', APP_URL);
+      console.log('Auth_url: ', AUTH_URL);
+
       return { data: session, error: null };
     } catch (error) {
       return { data: null, error: { message: 'Something Went Wrong' } };
