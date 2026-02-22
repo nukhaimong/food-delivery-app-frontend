@@ -7,12 +7,15 @@ export const userService = {
   getSession: async () => {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(`${AUTH_URL}/get-session`, {
-        headers: {
-          Cookie: cookieStore.toString(),
+      const res = await fetch(
+        `https://food-delivery-app-backend-58qb.onrender.com/api/auth/get-session`,
+        {
+          headers: {
+            Cookie: cookieStore.toString(),
+          },
+          cache: 'no-cache',
         },
-        cache: 'no-cache',
-      });
+      );
 
       const session = await res.json();
 

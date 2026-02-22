@@ -5,6 +5,7 @@ import TopRestaurants from '@/components/modules/homepage/topRestaurants';
 import { categoryService } from '@/services/category.service';
 import { mealService } from '@/services/meal.service';
 import { providerService } from '@/services/provider.service';
+
 export default async function Home() {
   const { data } = await categoryService.getCategory();
   const { data: mealData } = await mealService.getMeal();
