@@ -29,6 +29,21 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
+  const testCookie = async () => {
+    try {
+      const response = await fetch(
+        'https://food-delivery-app-backend-58qb.onrender.com/api/debug-cookies',
+        {
+          credentials: 'include',
+        },
+      );
+      const data = await response.json();
+      console.log('Cookie debug:', data);
+    } catch (error) {
+      console.error('Debug error:', error);
+    }
+  };
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -46,6 +61,8 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
           callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
           fetchOptions: {
             onSuccess: () => {
+              console.log('Login success, checking cookies...');
+              testCookie(); // Check if cookies are set
               useCartStore.persist.clearStorage();
             },
           },
