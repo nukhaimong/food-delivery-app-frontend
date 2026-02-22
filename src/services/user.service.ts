@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { cookies } from 'next/headers';
 
 const AUTH_URL = process.env.AUTH_URL;

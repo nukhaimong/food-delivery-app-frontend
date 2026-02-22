@@ -8,6 +8,8 @@ export default async function Proxy(request: NextRequest) {
   let isProvider = false;
 
   const pathname = request.nextUrl.pathname;
+  const sessionToken = request.cookies.get('better-auth.session_token');
+  console.log(sessionToken);
 
   const { data } = await userService.getSession();
 
