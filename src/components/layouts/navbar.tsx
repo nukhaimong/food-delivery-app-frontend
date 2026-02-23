@@ -86,7 +86,7 @@ const Navbar = ({
   auth = {
     login: { title: 'Login', url: '/log-in' },
     logout: { title: 'Logout' },
-    signup: { title: 'Sign up', url: 'sign-up' },
+    signup: { title: 'Sign up', url: '/sign-up' },
   },
   className,
   profile,
@@ -225,19 +225,25 @@ const Navbar = ({
 const renderMenuItem = (item: MenuItem) => {
   return (
     <NavigationMenuItem key={item.title}>
-      <Link
-        href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        {item.title}
-      </Link>
+      <NavigationMenuLink asChild>
+        <Link
+          href={item.url}
+          className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+        >
+          {item.title}
+        </Link>
+      </NavigationMenuLink>
     </NavigationMenuItem>
   );
 };
 
 const renderMobileMenuItem = (item: MenuItem) => {
   return (
-    <Link key={item.title} href={item.url} className="text-md font-semibold">
+    <Link
+      key={item.title}
+      href={item.url}
+      className="text-md font-semibold block py-2 px-4 hover:bg-muted rounded-md transition-colors"
+    >
       {item.title}
     </Link>
   );
