@@ -9,7 +9,7 @@ This platform allows customers to order food, providers (restaurant owners) to m
 
 - **Framework:** Next.js (App Router)
 - **Language:** TypeScript
-- **Library** React, Tailwind CSS
+- **Library:** React, Tailwind CSS
 - **Authentication:** (better-auth)
 - **State Management:** (zustand)
 
