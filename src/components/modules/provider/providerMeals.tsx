@@ -60,12 +60,12 @@ export default function ProviderMeals({ meals }: MealsProps) {
   return (
     <section className="px-6 py-8">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-6 justify-center sm:justify-start grid-cols-[repeat(auto-fill,280px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-center">
           {meals?.map((meal) => (
             <div
               key={meal.id}
               className={cn(
-                'group flex flex-col overflow-hidden rounded-3xl border transition-all duration-300 dark:bg-zinc-900',
+                'w-full group flex flex-col overflow-hidden rounded-3xl  border transition-all duration-300 dark:bg-zinc-900',
                 meal.is_available
                   ? 'border-zinc-100 bg-white hover:shadow-xl dark:border-zinc-800'
                   : 'border-zinc-200 bg-zinc-50/50 grayscale-[0.3] dark:border-zinc-800 opacity-90',

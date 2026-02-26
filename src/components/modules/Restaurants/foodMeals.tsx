@@ -14,6 +14,7 @@ interface MealsProps {
 
 export default function FoodMeals({ meals }: MealsProps) {
   const addItem = useCartStore((state) => state.addToCart);
+  console.log(meals);
 
   const handleAddToCart = (meal: CartMeal) => {
     if (!meal.is_available) {
@@ -122,6 +123,7 @@ export default function FoodMeals({ meals }: MealsProps) {
                         meal_name: meal.meal_name,
                         price: meal.price,
                         image_url: meal.image_url,
+                        is_available: meal.is_available,
                         category: {
                           category_name: meal.category.category_name,
                         },

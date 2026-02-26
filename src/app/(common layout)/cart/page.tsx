@@ -77,6 +77,8 @@ export default function CartPage() {
           phone_number: value.phone_number,
         }));
 
+        console.log(cartData);
+
         const res = await createOrder(cartData);
 
         if (res.error) {

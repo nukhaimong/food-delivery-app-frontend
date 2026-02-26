@@ -33,6 +33,9 @@ interface Order {
   order_status: OrderStatus;
   order_method: string;
   createdAt: string;
+  meal: {
+    meal_name: string;
+  };
 }
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -117,7 +120,7 @@ export default function ProviderOrdersPage() {
             <TableHeader className="bg-zinc-50 dark:bg-zinc-800/50">
               <TableRow className="hover:bg-transparent border-zinc-200 dark:border-zinc-800">
                 <TableHead className="w-[120px] font-black uppercase text-[10px] tracking-widest">
-                  Order ID
+                  Food Name
                 </TableHead>
                 <TableHead className="font-black uppercase text-[10px] tracking-widest">
                   Time & Items
@@ -144,7 +147,7 @@ export default function ProviderOrdersPage() {
                 >
                   {/* ID */}
                   <TableCell className="font-bold font-mono text-orange-600">
-                    #{order.order_id.slice(0, 8)}
+                    {order?.meal?.meal_name}
                   </TableCell>
 
                   {/* Time & Quantity */}

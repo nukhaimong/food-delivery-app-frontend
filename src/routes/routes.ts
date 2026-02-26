@@ -9,6 +9,10 @@ export const userRoutes: Routes[] = [
         url: '/',
       },
       {
+        title: 'Dashboard',
+        url: '/user-dashboard',
+      },
+      {
         title: 'Track Your Order',
         url: '/user-dashboard/my-orders',
       },
@@ -23,6 +27,10 @@ export const providerRoutes: Routes[] = [
       {
         title: 'Back to home',
         url: '/',
+      },
+      {
+        title: 'Dashboard',
+        url: '/provider-dashboard',
       },
       {
         title: 'Post Meal',
@@ -47,6 +55,10 @@ export const adminRoutes: Routes[] = [
       {
         title: 'Back to home',
         url: '/',
+      },
+      {
+        title: 'Dashboard',
+        url: '/admin-dashboard',
       },
       {
         title: 'See All Cuisines',

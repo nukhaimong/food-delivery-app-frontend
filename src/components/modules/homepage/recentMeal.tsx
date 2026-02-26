@@ -132,6 +132,7 @@ export default function RecentMealsSection() {
                         meal_name: meal.meal_name,
                         price: meal.price,
                         image_url: meal.image_url,
+                        is_available: meal.is_available,
                         category: {
                           category_name: meal.category.category_name,
                         },
