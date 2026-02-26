@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Bike, Clock, MapPin, Star, ShieldCheck } from 'lucide-react';
 
 interface FoodHeroProps {

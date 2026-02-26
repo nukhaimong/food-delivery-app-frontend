@@ -3,6 +3,7 @@ export interface Meal {
   meal_name: string;
   image_url: string;
   price: number;
+  is_available: boolean;
   description: string;
   category: {
     id: string;
@@ -31,6 +32,7 @@ export interface CartMeal {
   meal_name: string;
   price: number;
   image_url: string;
+  is_available?: boolean;
   category: {
     category_name: string;
   };

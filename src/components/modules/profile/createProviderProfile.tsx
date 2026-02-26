@@ -40,13 +40,14 @@ export default function CreateProviderProfile() {
       onSubmit: providerSchema,
     },
     onSubmit: async ({ value }) => {
+      const toastId = 'update-provider-profile';
       try {
         let restaurantImageUrl = value.restaurantImageUrl;
         if (selectedImage) {
-          toast.loading('Uploding Image');
+          toast.loading('Uploding Image', { id: toastId });
           restaurantImageUrl = await uploadToCloudinary(selectedImage);
-          toast.dismiss();
         }
+        toast.loading('Saving Profile...', { id: toastId });
         const res = await createProviderProfile(
           restaurantImageUrl,
           value.address,
@@ -54,17 +55,17 @@ export default function CreateProviderProfile() {
           value.phone,
         );
         if (res.error) {
-          toast.error('profile creation failed');
+          toast.error('profile creation failed', { id: toastId });
           return;
         }
-        toast.success('Profile Created Successfully');
+        toast.success('Profile Created Successfully', { id: toastId });
         form.reset();
         setPreview(null);
         setSelectedImage(null);
         router.refresh();
       } catch (error) {
         console.error(error);
-        toast.error('Something went wrong');
+        toast.error('Something went wrong', { id: toastId });
       }
     },
   });

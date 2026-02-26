@@ -42,19 +42,20 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading('Singin Up...');
+      const toastId = toast.loading('Signing Up...');
       try {
         const { data, error } = await authClient.signUp.email({
           ...value,
-          callbackURL: 'https://food-delivery-app-frontend-umber.vercel.app/',
+          callbackURL: '/',
         });
 
         if (error) {
           toast.error(error.message || 'something went wrong', { id: toastId });
           return;
         }
-        toast.success('Sign Up successfully', { id: toastId });
+        toast.success('Account Created Successfully', { id: toastId });
         router.push('/');
+        router.refresh();
       } catch (error: any) {
         toast.error(error.message || 'something went wrong', { id: toastId });
       }

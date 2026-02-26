@@ -54,12 +54,12 @@ export default function PostMenu() {
       onSubmit: mealSchema,
     },
     onSubmit: async ({ value }) => {
+      const toastId = 'post-meal';
       try {
         let image_url = value.image_url;
         if (selectedImage) {
-          toast.loading('Uploading Image');
+          toast.loading('Uploading Image', { id: toastId });
           image_url = await uploadToCloudinary(selectedImage);
-          toast.dismiss();
         }
         const data = {
           meal_name: value.meal_name,
@@ -68,6 +68,8 @@ export default function PostMenu() {
           price: value.price,
           category_id: value.category_id,
         };
+
+        toast.loading('Saving Meals', { id: toastId });
 
         const res = await createMeal(data);
         if (res.error) {
@@ -78,9 +80,9 @@ export default function PostMenu() {
         setSelectedImage(null);
         setPreview(null);
 
-        toast.success('Meal Created Successfully');
+        toast.success('Meal Created Successfully', { id: toastId });
       } catch (error) {
-        toast.error('Something Went Wrong');
+        toast.error('Something Went Wrong', { id: toastId });
       }
     },
   });

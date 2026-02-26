@@ -1,3 +1,4 @@
+import { categoryService } from '@/services/category.service';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -8,11 +9,9 @@ export interface Category {
   description: string;
 }
 
-interface CategorySectionProps {
-  categories: Category[];
-}
-
-export default function CategorySection({ categories }: CategorySectionProps) {
+export default async function CategorySection() {
+  const { data } = await categoryService.getCategory();
+  const categories: Category[] = data?.category;
   return (
     <section className="px-6 py-16 bg-gray-50/50 dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl">

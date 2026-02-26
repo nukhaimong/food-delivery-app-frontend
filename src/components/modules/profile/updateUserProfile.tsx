@@ -31,29 +31,29 @@ export default function UpdateUserProfile() {
       onSubmit: userSchema,
     },
     onSubmit: async ({ value }) => {
+      const toastId = 'updating-profile';
       try {
         let imageUrl = value.imageUrl;
 
         if (selectedImage) {
-          toast.loading('uploading Image...');
+          toast.loading('Uploading Image...', { id: toastId });
           imageUrl = await uploadToCloudinary(selectedImage);
-          toast.dismiss();
         }
-
+        toast.loading('Saving Profile..', { id: toastId });
         const res = await updateUser(imageUrl, value.name);
 
         if (res?.error) {
-          toast.error('Profile Update Failed');
+          toast.error('Profile Update Failed', { id: toastId });
           return;
         }
-        toast.success('Profile Updated Successfully');
+        toast.success('Profile Updated Successfully', { id: toastId });
         form.reset();
         setPreview(null);
         setSelectedImage(null);
         router.refresh();
       } catch (error) {
         console.error(error);
-        toast.error('Something went wrong');
+        toast.error('Something went wrong', { id: toastId });
       }
     },
   });

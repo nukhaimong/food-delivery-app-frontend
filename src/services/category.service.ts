@@ -6,9 +6,9 @@ export const categoryService = {
   getCategory: async () => {
     try {
       const res = await fetch(`${APP_URL}/category`, {
-        next: {
-          revalidate: 60,
-        },
+        // next: {
+        //   revalidate: 60,
+        // },
       });
 
       if (!res.ok) {

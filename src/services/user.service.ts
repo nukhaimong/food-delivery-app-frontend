@@ -7,24 +7,18 @@ export const userService = {
   getSession: async () => {
     try {
       const cookieStore = await cookies();
-      const res = await fetch(
-        `https://food-delivery-app-backend-58qb.onrender.com/api/auth/get-session`,
-        {
-          headers: {
-            Cookie: cookieStore.toString(),
-          },
-          cache: 'no-cache',
+      const res = await fetch(`${AUTH_URL}/get-session`, {
+        headers: {
+          Cookie: cookieStore.toString(),
         },
-      );
+        cache: 'no-cache',
+      });
 
       const session = await res.json();
 
       if (session === null) {
         return { data: null, error: { message: 'Something Went Wrong' } };
       }
-
-      console.log('APP_URL: ', APP_URL);
-      console.log('Auth_url: ', AUTH_URL);
 
       return { data: session, error: null };
     } catch (error) {

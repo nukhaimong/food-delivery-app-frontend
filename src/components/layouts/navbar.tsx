@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu } from 'lucide-react';
+import { Loader2, Menu } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -24,6 +24,7 @@ import Link from 'next/link';
 import CartButton from '../modules/cart/cart';
 import { useCartStore } from '@/store/useCartStore';
 import { authClient } from '@/lib/auth-client';
+import { useState } from 'react';
 
 interface MenuItem {
   title: string;
@@ -92,6 +93,25 @@ const Navbar = ({
   profile,
   session,
 }: Navbar1Props) => {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      useCartStore.persist.clearStorage();
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = '/';
+          },
+        },
+      });
+    } catch (error) {
+      console.error('Logout failed', error);
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <section className={cn('py-4', className)}>
       <div className="container mx-auto">
@@ -121,17 +141,12 @@ const Navbar = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={async () => {
-                  useCartStore.persist.clearStorage();
-                  await authClient.signOut({
-                    fetchOptions: {
-                      onSuccess: () => {
-                        window.location.href = '/';
-                      },
-                    },
-                  });
-                }}
+                disabled={isLoggingOut}
+                onClick={handleLogout}
               >
+                {isLoggingOut ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 {auth.logout.title}
               </Button>
             ) : (
@@ -184,17 +199,12 @@ const Navbar = ({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={async () => {
-                          useCartStore.persist.clearStorage();
-                          await authClient.signOut({
-                            fetchOptions: {
-                              onSuccess: () => {
-                                window.location.href = '/';
-                              },
-                            },
-                          });
-                        }}
+                        disabled={isLoggingOut}
+                        onClick={handleLogout}
                       >
+                        {isLoggingOut && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
                         {auth.logout.title}
                       </Button>
                     ) : (

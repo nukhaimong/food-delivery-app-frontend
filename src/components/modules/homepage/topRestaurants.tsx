@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Phone, ArrowUpRight } from 'lucide-react';
+import { providerService } from '@/services/provider.service';
 
 export interface Restaurant {
   id: string;
@@ -11,13 +12,11 @@ export interface Restaurant {
   provider_id: string;
 }
 
-interface TopRestaurantsSectionProps {
-  restaurants: Restaurant[];
-}
+export default async function TopRestaurants() {
+  const { data: providers } = await providerService.getProvidersProfiles();
 
-export default function TopRestaurants({
-  restaurants,
-}: TopRestaurantsSectionProps) {
+  const restaurants: Restaurant[] = providers?.allProvidersProfiles;
+
   return (
     <section className="px-6 py-16 bg-white dark:bg-zinc-950">
       <div className="mx-auto max-w-7xl">

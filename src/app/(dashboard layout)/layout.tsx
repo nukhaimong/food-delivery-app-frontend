@@ -1,7 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar';
-
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { Roles } from '@/constant/roles';
 import { userService } from '@/services/user.service';
 
 export default async function DashBoardLayout({
@@ -19,11 +17,9 @@ export default async function DashBoardLayout({
   return (
     <SidebarProvider className="gap-8">
       <AppSidebar userRole={userRole} />
-      {userRole === Roles.provider
-        ? provider
-        : userRole === Roles.admin
-          ? admin
-          : user}
+      {admin}
+      {provider}
+      {user}
     </SidebarProvider>
   );
 }

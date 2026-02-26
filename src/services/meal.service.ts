@@ -1,4 +1,5 @@
 import { Meal, PostMealData } from '@/types';
+import { error } from 'console';
 import { cookies } from 'next/headers';
 
 const APP_URL = process.env.APP_URL;
@@ -81,6 +82,49 @@ export const mealService = {
       });
       if (!res.ok) {
         return { data: null, error: { message: 'Meal Fetch failed' } };
+      }
+      const meals = await res.json();
+      return { data: meals, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Internal Server Error' } };
+    }
+  },
+  updateMeal: async (meal_id: string, data: { is_available: boolean }) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/meals/${meal_id}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(data),
+        cache: 'no-cache',
+      });
+      if (!res.ok) {
+        return { data: null, error: { message: "Meals Can't be Updated" } };
+      }
+      const meals = await res.json();
+      return { data: meals, error: null };
+    } catch (error) {
+      return { data: null, error: { message: 'Internal Server Error' } };
+    }
+  },
+  deleteMeals: async (meal_id: string) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${APP_URL}/meals/${meal_id}/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookieStore.toString(),
+        },
+        cache: 'no-cache',
+      });
+      if (!res.ok) {
+        return { data: null, error: { message: "Meals Can't be Deleted" } };
       }
       const meals = await res.json();
       return { data: meals, error: null };

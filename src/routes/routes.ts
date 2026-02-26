@@ -32,6 +32,10 @@ export const providerRoutes: Routes[] = [
         title: 'See Orders',
         url: '/provider-dashboard/my-orders',
       },
+      {
+        title: 'My Meals',
+        url: '/provider-dashboard/my-meals',
+      },
     ],
   },
 ];
@@ -44,7 +48,10 @@ export const adminRoutes: Routes[] = [
         title: 'Back to home',
         url: '/',
       },
-
+      {
+        title: 'See All Cuisines',
+        url: '/admin-dashboard/see-all-cuisines ',
+      },
       {
         title: 'Create Cuisine Category',
         url: '/admin-dashboard/create-category',

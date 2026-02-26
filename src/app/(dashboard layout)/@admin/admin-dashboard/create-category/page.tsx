@@ -31,26 +31,30 @@ export default function Page() {
       onSubmit: categorySchema,
     },
     onSubmit: async ({ value }) => {
+      const toastId = 'creating-toast';
       try {
         let categoryImage = value.categoryImage;
         if (selectedImage) {
-          toast.loading('Uploading Image');
+          toast.loading('Uploading Image', { id: toastId });
           categoryImage = await uploadToCloudinary(selectedImage);
-          toast.dismiss();
         }
+
+        toast.loading('saving category', { id: toastId });
+
         const res = await createCategory(
           value.categoryName,
           value.description,
           categoryImage,
         );
         if (res.error) {
-          toast.error('Category creation failed');
+          toast.error('Category creation failed', { id: toastId });
           return;
         }
-        toast.success('Category Creation Successfylly');
+        toast.success('Category Creation Successfully', { id: toastId });
+        form.reset();
       } catch (error) {
         console.error(error);
-        toast.error('Something went wrong');
+        toast.error('Something went wrong', { id: toastId });
       }
     },
   });
