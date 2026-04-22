@@ -1,5 +1,4 @@
-import { Meal, PostMealData } from '@/types';
-import { error } from 'console';
+import { PostMealData } from '@/types';
 import { cookies } from 'next/headers';
 
 const APP_URL = process.env.APP_URL;
