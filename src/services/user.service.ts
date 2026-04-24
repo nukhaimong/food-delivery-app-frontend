@@ -54,4 +54,30 @@ export const userService = {
       return { data: null, error: { message: 'Something went wrong' } };
     }
   },
+  getMe: async () => {
+    try {
+      const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
+      const res = await fetch(`${APP_URL}/users/get-me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
+        },
+        cache: 'no-cache',
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        return { error: { message: data.message } };
+      }
+
+      return { data };
+    } catch (error) {
+      console.log('something went wrong here');
+      return { error: { message: 'Something Went Wrong' } };
+    }
+  },
 };

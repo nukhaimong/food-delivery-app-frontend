@@ -9,8 +9,7 @@ export default async function Proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  const { data } = await userService.getSession();
-
+  const { data } = await userService.getMe();
   if (data) {
     isAuthenticated = true;
     isAdmin = data?.user?.user_role === Roles.admin;
