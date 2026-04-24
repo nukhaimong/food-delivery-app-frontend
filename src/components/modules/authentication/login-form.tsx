@@ -21,6 +21,7 @@ import { useForm } from '@tanstack/react-form';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useCartStore } from '@/store/useCartStore';
+import Cookies from 'js-cookie';
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
@@ -65,6 +66,14 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
             },
           },
         });
+        if (data !== null && data?.token !== null) {
+          Cookies.set('session_token', data.token, {
+            expires: 7, // 7 days
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+          });
+        }
         if (error) {
           toast.error(error.message, { id: toastId });
           return;

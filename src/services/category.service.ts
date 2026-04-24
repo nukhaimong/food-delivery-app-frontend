@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import Cookies from 'js-cookie';
 
 const APP_URL = process.env.APP_URL;
 
@@ -44,12 +45,14 @@ export const categoryService = {
     category_image: string,
   ) => {
     const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
     try {
       const res = await fetch(`${APP_URL}/category/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           category_name,
