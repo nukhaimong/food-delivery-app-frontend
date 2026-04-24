@@ -20,7 +20,8 @@ import { toast } from 'sonner';
 import z from 'zod';
 import { createOrder } from '@/actions/order.action';
 import { useEffect, useState } from 'react';
-import { getSession } from '@/actions/user.action';
+import { userService } from '@/services/user.service';
+import { getMe } from '@/actions/user.action';
 
 const orderSchema = z.object({
   delivery_address: z
@@ -41,7 +42,7 @@ export default function CartPage() {
     useCartStore();
 
   const fetchUser = async () => {
-    const { data } = await getSession();
+    const { data } = await getMe();
     setUser(data?.user);
   };
 

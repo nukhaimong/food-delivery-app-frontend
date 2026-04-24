@@ -6,7 +6,7 @@ import { providerService } from '@/services/provider.service';
 import { userService } from '@/services/user.service';
 
 export default async function Profile() {
-  const { data } = await userService.getSession();
+  const { data } = await userService.getMe();
 
   const { data: providerData } = await providerService.getProviderById(
     data?.user?.id,

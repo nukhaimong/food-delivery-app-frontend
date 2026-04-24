@@ -70,7 +70,7 @@ export const userService = {
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (!res.ok) {
         return { error: { message: data.message } };
       }
 

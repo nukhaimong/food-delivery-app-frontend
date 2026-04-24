@@ -1,10 +1,10 @@
-import { getSession } from '@/actions/user.action';
 import ProviderMeals from '@/components/modules/provider/providerMeals';
 import NoMealsState from '@/components/modules/Restaurants/noMealState';
 import { mealService } from '@/services/meal.service';
+import { userService } from '@/services/user.service';
 
 export default async function MyRestaurantMeals() {
-  const { data: session } = await getSession();
+  const { data: session } = await userService.getMe();
   const { data } = await mealService.getMealByProviderId(session?.user?.id);
   const meals = data?.meals;
 

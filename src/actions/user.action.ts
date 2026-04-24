@@ -11,3 +11,7 @@ export const updateUser = async (
 ) => {
   return await userService.updateUser(imageUrl, name);
 };
+
+export const getMe = async () => {
+  return await userService.getMe();
+};
