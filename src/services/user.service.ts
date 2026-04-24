@@ -28,12 +28,14 @@ export const userService = {
   updateUser: async (imageUrl?: string, name?: string) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/users/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...(name && { name }),

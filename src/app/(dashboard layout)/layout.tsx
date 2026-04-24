@@ -11,7 +11,7 @@ export default async function DashBoardLayout({
   user: React.ReactNode;
   provider: React.ReactNode;
 }) {
-  const { data } = await userService.getSession();
+  const { data } = await userService.getMe();
   let userRole = data?.user?.user_role;
 
   return (

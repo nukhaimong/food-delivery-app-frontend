@@ -2,7 +2,7 @@ import { userService } from '@/services/user.service';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default async function NavProfile() {
-  const { data } = await userService.getSession();
+  const { data } = await userService.getMe();
   const user = data?.user;
 
   return (

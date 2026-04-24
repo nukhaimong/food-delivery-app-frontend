@@ -8,11 +8,9 @@ export default async function CommonLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = await userService.getSession();
-  const session = data?.session;
   return (
     <div>
-      <Navbar profile={<NavProfile />} session={session} />
+      <Navbar />
       {children}
       <Footer />
     </div>

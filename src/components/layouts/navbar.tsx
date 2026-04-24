@@ -1,9 +1,7 @@
 'use client';
 
 import { Loader2, Menu } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
-
 import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +22,9 @@ import Link from 'next/link';
 import CartButton from '../modules/cart/cart';
 import { useCartStore } from '@/store/useCartStore';
 import { authClient } from '@/lib/auth-client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getMe } from '@/actions/user.action';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface MenuItem {
   title: string;
@@ -55,8 +55,6 @@ interface Navbar1Props {
       url: string;
     };
   };
-  profile: React.ReactNode;
-  session: {};
 }
 
 const Navbar = ({
@@ -66,23 +64,10 @@ const Navbar = ({
   },
   menu = [
     { title: 'Home', url: '/' },
-    {
-      title: 'Restaurants',
-      url: '/restaurants',
-    },
-    {
-      title: 'Cuisines',
-      url: '/cuisines',
-    },
-    {
-      title: 'Explore Foods',
-      url: '/foods',
-    },
-
-    {
-      title: 'Dashboard',
-      url: '/user-dashboard',
-    },
+    { title: 'Restaurants', url: '/restaurants' },
+    { title: 'Cuisines', url: '/cuisines' },
+    { title: 'Explore Foods', url: '/foods' },
+    { title: 'Dashboard', url: '/user-dashboard' },
   ],
   auth = {
     login: { title: 'Login', url: '/log-in' },
@@ -90,10 +75,28 @@ const Navbar = ({
     signup: { title: 'Sign up', url: '/sign-up' },
   },
   className,
-  profile,
-  session,
 }: Navbar1Props) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data, error } = await getMe();
+        if (data && !error) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -102,6 +105,7 @@ const Navbar = ({
       await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
+            setUser(null); // Clear user state
             window.location.href = '/';
           },
         },
@@ -110,6 +114,14 @@ const Navbar = ({
       console.error('Logout failed', error);
       setIsLoggingOut(false);
     }
+  };
+
+  // Get user initial for avatar fallback
+  const getUserInitial = () => {
+    if (user?.name) {
+      return user.name.charAt(0).toUpperCase();
+    }
+    return 'U';
   };
 
   return (
@@ -134,40 +146,61 @@ const Navbar = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <ModeToggle />
             <CartButton />
-            {session !== undefined ? (
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isLoggingOut}
-                onClick={handleLogout}
-              >
-                {isLoggingOut ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
-                {auth.logout.title}
-              </Button>
+
+            {!isLoading && user ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isLoggingOut}
+                  onClick={handleLogout}
+                >
+                  {isLoggingOut ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : null}
+                  {auth.logout.title}
+                </Button>
+                <Link href="/profile">
+                  <Avatar className="h-9 w-9 border border-gray-200 dark:border-slate-800 cursor-pointer hover:opacity-80 transition-opacity">
+                    <AvatarImage
+                      src={user?.image || ''}
+                      alt={user?.name || 'User'}
+                    />
+                    <AvatarFallback className="bg-orange-500 text-white font-bold">
+                      {getUserInitial()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              </>
+            ) : !isLoading && !user ? (
+              <>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </>
             ) : (
-              <Button asChild variant="outline" size="sm">
-                <Link href={auth.login.url}>{auth.login.title}</Link>
+              // Loading state
+              <Button variant="outline" size="sm" disabled>
+                <Loader2 className="h-4 w-4 animate-spin" />
               </Button>
             )}
-
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
-            {session !== undefined && <Link href="/profile">{profile}</Link>}
           </div>
         </nav>
 
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
             <Link href={logo.url}>
-              <p className="cursor-pointer">{logo.title}</p>
+              <p className="cursor-pointer text-3xl font-black tracking-tighter text-zinc-900 dark:text-white">
+                H<span className="text-orange-500">AANG</span>
+                <span className="inline-block h-2 w-2 rounded-full bg-orange-500 ml-0.5" />
+              </p>
             </Link>
             <Sheet>
               <SheetTrigger asChild>
@@ -184,43 +217,61 @@ const Navbar = ({
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
+                  <div className="flex w-full flex-col gap-4">
                     {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
+                  </div>
 
                   <div className="flex flex-col gap-3">
                     <ModeToggle />
                     <CartButton />
-                    {session !== undefined ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={isLoggingOut}
-                        onClick={handleLogout}
-                      >
-                        {isLoggingOut && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
-                        {auth.logout.title}
-                      </Button>
+
+                    {!isLoading && user ? (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={isLoggingOut}
+                          onClick={handleLogout}
+                        >
+                          {isLoggingOut && (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          )}
+                          {auth.logout.title}
+                        </Button>
+                        <Link
+                          href="/profile"
+                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors"
+                        >
+                          <Avatar className="h-8 w-8 border border-gray-200 dark:border-slate-800">
+                            <AvatarImage
+                              src={user?.image || ''}
+                              alt={user?.name || 'User'}
+                            />
+                            <AvatarFallback className="bg-orange-500 text-white text-xs font-bold">
+                              {getUserInitial()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm font-medium">
+                            {user?.name || 'Profile'}
+                          </span>
+                        </Link>
+                      </>
+                    ) : !isLoading && !user ? (
+                      <>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>
+                            {auth.signup.title}
+                          </Link>
+                        </Button>
+                      </>
                     ) : (
-                      <Button variant="outline" size="sm">
-                        <Link href={auth.login.url}>{auth.login.title}</Link>
+                      <Button variant="outline" size="sm" disabled>
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       </Button>
                     )}
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                    <div className="flex justify-around items-center bg-gray-900 p-1 rounded-xl border border-gray-500">
-                      <p className="text-xl">Profile</p>
-                      {session !== undefined && (
-                        <Link href="/profile">{profile}</Link>
-                      )}
-                    </div>
                   </div>
                 </div>
               </SheetContent>
