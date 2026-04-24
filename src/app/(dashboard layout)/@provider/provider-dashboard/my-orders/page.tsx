@@ -1,14 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  Package,
-  CheckCircle,
-  Clock,
-  Banknote,
-  Loader2,
-  ExternalLink,
-} from 'lucide-react';
+import { CheckCircle, Clock, Banknote, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -21,6 +14,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { OrderStatus } from '@/types';
+import Cookies from 'js-cookie';
 
 interface Order {
   order_id: string;
@@ -46,10 +40,14 @@ export default function ProviderOrdersPage() {
 
   const fetchData = async () => {
     try {
+      const token = Cookies.get('session_token');
       const res = await fetch(`${APP_URL}/order/provider`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        //credentials: 'include',
       });
       if (res.ok) {
         const result = await res.json();
