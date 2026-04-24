@@ -30,6 +30,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: '',
@@ -63,6 +64,7 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
           return;
         }
         toast.success('User Logged In successfully', { id: toastId });
+        router.refresh();
       } catch (error) {
         toast.error('Something went wrong', { id: toastId });
       }
