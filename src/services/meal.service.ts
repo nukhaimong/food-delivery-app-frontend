@@ -6,20 +6,18 @@ const APP_URL = process.env.APP_URL;
 export const mealService = {
   getMeal: async () => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${APP_URL}/meals`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
         },
         cache: 'no-cache',
       });
+      const meals = await res.json();
       if (!res.ok) {
         return { data: null, error: { message: 'Meal Fetch failed' } };
       }
-      const meals = await res.json();
+
       return { data: meals, error: null };
     } catch (error) {
       return { data: null, error: { message: 'Internal Server Error' } };
@@ -27,128 +25,125 @@ export const mealService = {
   },
   getMealById: async (meal_id: string) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${APP_URL}/meals${meal_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
         },
         cache: 'no-cache',
       });
       if (!res.ok) {
-        return { data: null, error: { message: 'Meal Fetch failed' } };
+        return { error: { message: 'Meal Fetch failed' } };
       }
       const meals = await res.json();
-      return { data: meals, error: null };
+      return { data: meals };
     } catch (error) {
-      return { data: null, error: { message: 'Internal Server Error' } };
+      return { error: { message: 'Internal Server Error' } };
     }
   },
   getMealByProviderId: async (provider_id: string) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${APP_URL}/meals/provider/${provider_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
         },
         cache: 'no-cache',
       });
       if (!res.ok) {
-        return { data: null, error: { message: 'Meal Fetch failed' } };
+        return { error: { message: 'Meal Fetch failed' } };
       }
       const meals = await res.json();
-      return { data: meals, error: null };
+      return { data: meals };
     } catch (error) {
-      return { data: null, error: { message: 'Internal Server Error' } };
+      return { error: { message: 'Internal Server Error' } };
     }
   },
   getMealByCategoryId: async (category_id: string) => {
     try {
-      const cookieStore = await cookies();
-
       const res = await fetch(`${APP_URL}/meals/category/${category_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
         },
         cache: 'no-cache',
       });
       if (!res.ok) {
-        return { data: null, error: { message: 'Meal Fetch failed' } };
+        return { error: { message: 'Meal Fetch failed' } };
       }
       const meals = await res.json();
-      return { data: meals, error: null };
+      return { data: meals };
     } catch (error) {
-      return { data: null, error: { message: 'Internal Server Error' } };
+      return { error: { message: 'Internal Server Error' } };
     }
   },
-  updateMeal: async (meal_id: string, data: { is_available: boolean }) => {
+  updateMeal: async (meal_id: string, mealData: { is_available: boolean }) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/meals/${meal_id}/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(mealData),
         cache: 'no-cache',
       });
+      const data = await res.json();
       if (!res.ok) {
-        return { data: null, error: { message: "Meals Can't be Updated" } };
+        return { error: { message: data.message } };
       }
-      const meals = await res.json();
-      return { data: meals, error: null };
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Internal Server Error' } };
+      return { error: { message: 'Internal Server Error' } };
     }
   },
   deleteMeals: async (meal_id: string) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/meals/${meal_id}/delete`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: 'no-cache',
       });
+      const data = await res.json();
       if (!res.ok) {
-        return { data: null, error: { message: "Meals Can't be Deleted" } };
+        return { error: { message: data.message } };
       }
-      const meals = await res.json();
-      return { data: meals, error: null };
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Internal Server Error' } };
+      return { error: { message: 'Internal Server Error' } };
     }
   },
-  createMeal: async (data: PostMealData) => {
+  createMeal: async (mealData: PostMealData) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/meals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(mealData),
         cache: 'no-cache',
       });
+      const data = await res.json();
       if (!res.ok) {
-        return { data: null, error: { message: 'Meal Creation failed' } };
+        return { data: null, error: { message: data.message } };
       }
-      const meal = await res.json();
-      return { data: meal, error: null };
+
+      return data;
     } catch (error) {
       return { data: null, error: { message: 'Internal Server Error' } };
     }

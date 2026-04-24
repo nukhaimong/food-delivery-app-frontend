@@ -11,12 +11,12 @@ export const categoryService = {
         //   revalidate: 60,
         // },
       });
-      const data = await res.json();
-      if (!res.ok) {
-        return { error: { message: data.message } };
-      }
 
-      return data;
+      if (!res.ok) {
+        return { error: { message: 'Something Went Worng' } };
+      }
+      const category = await res.json();
+      return { data: category };
     } catch (error) {
       return { error: { message: 'Something Went Wrong' } };
     }
@@ -29,13 +29,12 @@ export const categoryService = {
         },
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        return { error: { message: data.message } };
+        return { error: { message: 'Meal fetch Successfully' } };
       }
+      const categories = await res.json();
 
-      return data;
+      return { data: categories };
     } catch (error) {
       return { error: { message: 'Something Went Wrong' } };
     }
@@ -63,7 +62,6 @@ export const categoryService = {
         cache: 'no-cache',
       });
       const data = await res.json();
-
       if (!res.ok) {
         return { error: { message: data.message } };
       }
@@ -71,7 +69,7 @@ export const categoryService = {
       return data;
     } catch (error) {
       console.error(error);
-      return { error: { message: 'Category Creation failed' } };
+      return { data: null, error: { message: 'Category Creation failed' } };
     }
   },
 };
