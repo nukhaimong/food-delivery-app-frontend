@@ -11,14 +11,14 @@ export const categoryService = {
         //   revalidate: 60,
         // },
       });
-
+      const data = await res.json();
       if (!res.ok) {
-        return { data: null, error: { message: 'Something Went Worng' } };
+        return { error: { message: data.message } };
       }
-      const category = await res.json();
-      return { data: category, error: null };
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Something Went Wrong' } };
+      return { error: { message: 'Something Went Wrong' } };
     }
   },
   getCategoryById: async (category_id: string) => {
@@ -29,14 +29,15 @@ export const categoryService = {
         },
       });
 
-      if (!res.ok) {
-        return { data: null, error: { message: 'Meal fetch Successfully' } };
-      }
-      const categories = await res.json();
+      const data = await res.json();
 
-      return { data: categories, error: null };
+      if (!res.ok) {
+        return { error: { message: data.message } };
+      }
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Something Went Wrong' } };
+      return { error: { message: 'Something Went Wrong' } };
     }
   },
   createCategory: async (
@@ -61,14 +62,16 @@ export const categoryService = {
         }),
         cache: 'no-cache',
       });
+      const data = await res.json();
+
       if (!res.ok) {
-        return { data: null, error: { message: 'Category Creation failed' } };
+        return { error: { message: data.message } };
       }
-      const category = await res.json();
-      return { data: category, error: null };
+
+      return data;
     } catch (error) {
       console.error(error);
-      return { data: null, error: { message: 'Category Creation failed' } };
+      return { error: { message: 'Category Creation failed' } };
     }
   },
 };

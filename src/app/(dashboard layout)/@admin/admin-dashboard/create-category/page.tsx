@@ -47,10 +47,10 @@ export default function Page() {
           categoryImage,
         );
         if (res.error) {
-          toast.error('Category creation failed', { id: toastId });
+          toast.error(res.error.message, { id: toastId });
           return;
         }
-        toast.success('Category Creation Successfully', { id: toastId });
+        toast.success(res.data.message, { id: toastId });
         form.reset();
       } catch (error) {
         console.error(error);
