@@ -5,38 +5,43 @@ const APP_URL = process.env.APP_URL;
 export const providerService = {
   getProvidersProfiles: async () => {
     const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
+
     try {
       const res = await fetch(`${APP_URL}/provider-profile`, {
         headers: {
-          Cookie: cookieStore.toString(),
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: 'no-cache',
       });
       const providers = await res.json();
-      if (!res) {
-        return { data: null, error: { message: 'Something Went Wrong' } };
+      if (!res.ok) {
+        return { error: { message: 'Something Went Wrong' } };
       }
-      return { data: providers, error: null };
+      return { data: providers };
     } catch (error) {
-      return { data: null, error: { message: 'Something Went Wrong' } };
+      return { error: { message: 'Something Went Wrong' } };
     }
   },
   getProviderById: async (providerId: string) => {
     const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
     try {
       const res = await fetch(`${APP_URL}/provider-profile/${providerId}`, {
         headers: {
-          Cookie: cookieStore.toString(),
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: 'no-cache',
       });
       const providersProfile = await res.json();
-      if (!res) {
-        return { data: null, error: { message: 'Something Went Wrong' } };
+      if (!res.ok) {
+        return { error: { message: 'Something Went Wrong' } };
       }
       return { data: providersProfile, error: null };
     } catch (error) {
-      return { data: null, error: { message: 'Something Went Wrong' } };
+      return { error: { message: 'Something Went Wrong' } };
     }
   },
 
@@ -47,12 +52,14 @@ export const providerService = {
     phone?: string,
   ) => {
     const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
     try {
       const res = await fetch(`${APP_URL}/provider-profile/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...(restaurantImageUrl && { restaurant_image: restaurantImageUrl }),
@@ -62,14 +69,15 @@ export const providerService = {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        console.error('Backend error:', res.status);
-        return { data: null, error: { message: 'Profile Creation failed' } };
+        return { error: { message: data.message } };
       }
-      const providerProfile = await res.json();
-      return { data: providerProfile, error: null };
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Something went wrong' } };
+      return { error: { message: 'Something went wrong' } };
     }
   },
 };

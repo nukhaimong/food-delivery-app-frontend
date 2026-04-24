@@ -46,7 +46,7 @@ export default function ProviderMeals({ meals }: MealsProps) {
       try {
         const res = await deleteMeal(meal_id);
         if (!res.error) {
-          toast.success('Meal deleted successfully');
+          toast.success(res.message);
           router.refresh();
         } else {
           toast.error(res.error.message || 'Failed to delete');

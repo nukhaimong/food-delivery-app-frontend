@@ -55,10 +55,10 @@ export default function CreateProviderProfile() {
           value.phone,
         );
         if (res.error) {
-          toast.error('profile creation failed', { id: toastId });
+          toast.error(res.error.message, { id: toastId });
           return;
         }
-        toast.success('Profile Created Successfully', { id: toastId });
+        toast.success(res.message, { id: toastId });
         form.reset();
         setPreview(null);
         setSelectedImage(null);

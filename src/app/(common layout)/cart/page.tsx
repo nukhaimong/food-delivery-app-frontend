@@ -86,7 +86,7 @@ export default function CartPage() {
           return;
         }
         setIsConfirmed(true);
-        toast.success('Your order has been placed.', {
+        toast.success(res.message, {
           id: toastId,
           description:
             'You can track the preparation status in your dashboard.',

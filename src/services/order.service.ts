@@ -5,73 +5,74 @@ import { cookies } from 'next/headers';
 const APP_URL = process.env.APP_URL;
 
 export const orderService = {
-  createOrder: async (data: orderData[]) => {
+  createOrder: async (orderData: orderData[]) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/order/place`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(orderData),
         cache: 'no-cache',
       });
+      const data = await res.json();
       if (!res.ok) {
-        return { data: null, error: { message: 'Order Creation Failed' } };
+        return { error: { message: data.message } };
       }
-      const order = await res.json();
-      return { data: order, error: null };
+
+      return data;
     } catch (error) {
-      return { data: null, error: { message: 'Order Creation Failed' } };
+      return { error: { message: 'Order Creation Failed' } };
     }
   },
   getOrderByProviderId: async () => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/order/provider`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: 'no-cache',
-        next: {
-          revalidate: 10,
-        },
       });
 
       if (!res.ok) {
-        return { data: null, error: { message: 'Failed To Fetch Orders' } };
+        return { error: { message: 'Failed To Fetch Orders' } };
       }
       const orders = await res.json();
-      return { data: orders, error: null };
+      return { data: orders };
     } catch (error) {
-      return { data: null, error: { message: 'Failed To Fetch Orders' } };
+      return { error: { message: 'Failed To Fetch Orders' } };
     }
   },
   getOrderByCustomerId: async () => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/order/customer/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: 'no-cache',
       });
 
       if (!res.ok) {
-        return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+        return { error: { message: 'Failed To Fetch Your Order' } };
       }
       const orders = await res.json();
-      return { data: orders, error: null };
+      return { data: orders };
     } catch (error) {
-      return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+      return { error: { message: 'Failed To Fetch Your Order' } };
     }
   },
   updateOrderStatusByCustomer: async (
@@ -80,24 +81,26 @@ export const orderService = {
   ) => {
     try {
       const cookieStore = await cookies();
+      const token = cookieStore.get('session_token')?.value;
 
       const res = await fetch(`${APP_URL}/order/update/${order_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Cookie: cookieStore.toString(),
+          //Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ order_status }),
         cache: 'no-cache',
       });
 
       if (!res.ok) {
-        return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+        return { error: { message: 'Failed To Fetch Your Order' } };
       }
       const orders = await res.json();
-      return { data: orders, error: null };
+      return { data: orders };
     } catch (error) {
-      return { data: null, error: { message: 'Failed To Fetch Your Order' } };
+      return { error: { message: 'Failed To Fetch Your Order' } };
     }
   },
 };
