@@ -2,7 +2,6 @@
 
 import { Loader2, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -21,10 +20,11 @@ import { ModeToggle } from './modeToggle';
 import Link from 'next/link';
 import CartButton from '../modules/cart/cart';
 import { useCartStore } from '@/store/useCartStore';
-import { authClient } from '@/lib/auth-client';
 import { useState, useEffect } from 'react';
 import { getMe } from '@/actions/user.action';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface MenuItem {
   title: string;
@@ -79,6 +79,7 @@ const Navbar = ({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -101,17 +102,20 @@ const Navbar = ({
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
+      // 1. Clear local state immediately to update UI
+      setUser(null);
+
+      // 2. Clear storage and cookies
       useCartStore.persist.clearStorage();
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            setUser(null); // Clear user state
-            window.location.href = '/';
-          },
-        },
-      });
+      Cookies.remove('session_token');
+
+      // 3. Refresh and redirect if necessary
+      router.refresh();
+      router.push('/'); // Optional: ensure they go to home
     } catch (error) {
       console.error('Logout failed', error);
+    } finally {
+      // 4. Stop the spinner
       setIsLoggingOut(false);
     }
   };

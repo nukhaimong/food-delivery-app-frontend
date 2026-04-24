@@ -22,6 +22,7 @@ import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useCartStore } from '@/store/useCartStore';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.email('Invalid email address'),
@@ -29,21 +30,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
-  // const testCookie = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       'https://food-delivery-app-backend-58qb.onrender.com/api/debug-cookies',
-  //       {
-  //         credentials: 'include',
-  //       },
-  //     );
-  //     const data = await response.json();
-  //     console.log('Cookie debug:', data);
-  //   } catch (error) {
-  //     console.error('Debug error:', error);
-  //   }
-  // };
-
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: '',
@@ -60,8 +47,6 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
           callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL,
           fetchOptions: {
             onSuccess: () => {
-              // console.log('Login success, checking cookies...');
-              // testCookie(); // Check if cookies are set
               useCartStore.persist.clearStorage();
             },
           },
@@ -79,6 +64,8 @@ export function LoginForm({ ...props }: React.ComponentProps<'div'>) {
           return;
         }
         toast.success('User Logged In successfully', { id: toastId });
+        router.push('/');
+        router.refresh();
       } catch (error) {
         toast.error('Something went wrong', { id: toastId });
       }
