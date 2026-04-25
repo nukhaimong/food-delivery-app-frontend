@@ -10,6 +10,7 @@ export const categoryService = {
         // next: {
         //   revalidate: 60,
         // },
+        cache: 'no-cache',
       });
 
       if (!res.ok) {
