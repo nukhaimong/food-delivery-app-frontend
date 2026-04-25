@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -21,6 +20,7 @@ import { useForm } from '@tanstack/react-form';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const formSchema = z.object({
   name: z.string().min(4, 'Minimum Length is 4 Characters'),
@@ -46,15 +46,24 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const { data, error } = await authClient.signUp.email({
           ...value,
-          callbackURL: '/',
+          callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL,
         });
+
+        if (data !== null && data?.token !== null) {
+          Cookies.set('session_token', data.token, {
+            expires: 7, // 7 days
+            secure: true,
+            sameSite: 'none',
+            path: '/',
+          });
+        }
 
         if (error) {
           toast.error(error.message || 'something went wrong', { id: toastId });
           return;
         }
+
         toast.success('Account Created Successfully', { id: toastId });
-        router.push('/');
         router.refresh();
       } catch (error: any) {
         toast.error(error.message || 'something went wrong', { id: toastId });
