@@ -44,7 +44,6 @@ export const providerService = {
       return { error: { message: 'Something Went Wrong' } };
     }
   },
-
   createProviderProfile: async (
     restaurantImageUrl?: string,
     address?: string,

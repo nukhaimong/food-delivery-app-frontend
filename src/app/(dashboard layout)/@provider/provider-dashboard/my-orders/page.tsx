@@ -64,9 +64,13 @@ export default function ProviderOrdersPage() {
   ) => {
     setLoadingId(order_id);
     try {
+      const token = Cookies.get('session_token');
       const res = await fetch(`${APP_URL}/order/update/${order_id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ order_status: newStatus }),
         credentials: 'include',
       });
