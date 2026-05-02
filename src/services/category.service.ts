@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import Cookies from 'js-cookie';
 
 const APP_URL = process.env.APP_URL;
 
